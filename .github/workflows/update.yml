@@ -1,0 +1,50 @@
+name: Daily Slate Update
+
+on:
+  schedule:
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: 'Date YYYY-MM-DD (blank = today)'
+        required: false
+        default: ''
+
+jobs:
+  update-slate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install requests python-dotenv
+
+      - name: Run slate updater
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          DATE_ARG=""
+          if [ -n "${{ github.event.inputs.target_date }}" ]; then
+            DATE_ARG="--date ${{ github.event.inputs.target_date }}"
+          fi
+          python scripts/edgeos_update.py \
+            --template edgeos_combined.html \
+            --output edgeos_combined.html \
+            $DATE_ARG
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "EdgeOS Bot"
+          git config user.email "edgeos-bot@users.noreply.github.com"
+          git add edgeos_combined.html
+          git diff --staged --quiet || git commit -m "Slate update $(date -u '+%Y-%m-%d %H:%M UTC')" && git push
