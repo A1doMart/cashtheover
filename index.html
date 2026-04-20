@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EdgeOS — MLB · NBA · NFL Betting Models</title>
+  <style>
+    :root {
+      --bg: #0b0e17;
+      --c1: #11151f;
+      --t1: #e8eaf2;
+      --t2: #9ba3be;
+      --t3: #5a6280;
+      --g: #00e676;
+      --gd: rgba(0,230,118,.08);
+      --gb: rgba(0,230,118,.25);
+      --am: #ffb300;
+      --b1: rgba(255,255,255,.07);
+      --mono: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--t1);
+      font-family: var(--mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .brand {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 8px;
+    }
+    .brand em { color: var(--g); font-style: normal; }
+    .tagline {
+      font-size: 11px;
+      color: var(--t3);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 860px;
+      width: 100%;
+      margin-bottom: 48px;
+    }
+    .card {
+      background: var(--c1);
+      border: 1px solid var(--b1);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card-sport {
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: var(--t3);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .card-desc {
+      font-size: 10px;
+      color: var(--t2);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .card-models {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .model-chip {
+      font-size: 9px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--b1);
+      color: var(--t3);
+      letter-spacing: .06em;
+    }
+    .model-chip.t { border-color: var(--gb); color: var(--g); }
+    .model-chip.m { border-color: rgba(199,125,255,.3); color: #c77dff; }
+    .model-chip.s { border-color: rgba(90,160,255,.3); color: #5aa0ff; }
+
+    .cta {
+      display: inline-block;
+      background: var(--gd);
+      border: 1px solid var(--gb);
+      color: var(--g);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background .15s;
+      margin-bottom: 48px;
+    }
+    .cta:hover { background: rgba(0,230,118,.14); }
+
+    .disclaimer {
+      max-width: 560px;
+      text-align: center;
+      font-size: 9px;
+      color: var(--t3);
+      line-height: 1.8;
+      border-top: 1px solid var(--b1);
+      padding-top: 24px;
+    }
+    .disclaimer strong { color: var(--am); }
+    .live-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--g);
+      box-shadow: 0 0 6px var(--g);
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .3; }
+    }
+    .status {
+      font-size: 9px;
+      color: var(--t3);
+      letter-spacing: .08em;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="brand">EDGE<em>OS</em></div>
+  <div class="tagline">MLB · NBA · NFL Betting Models · Research Only</div>
+
+  <div class="status">
+    <span class="live-dot"></span>
+    Slate updated daily at 9 AM CT
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-sport">⚾ Baseball</div>
+      <div class="card-title">MLB Totals</div>
+      <div class="card-desc">Seeded Monte Carlo simulation using xERA, K/9, wRC+, bullpen ERA, park factors, and weather. 10,000 sims per game.</div>
+      <div class="card-models">
+        <span class="model-chip t">TOTALS v10</span>
+        <span class="model-chip m">MONEYLINE</span>
+        <span class="model-chip s">RUN LINE v2</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-sport">🏀 Basketball</div>
+      <div class="card-title">NBA Models</div>
+      <div class="card-desc">Points projected from offensive rating, defensive rating, and pace. Spread coverage via normal distribution margin model.</div>
+      <div class="card-models">
+        <span class="model-chip t">TOTALS</span>
+        <span class="model-chip m">MONEYLINE</span>
+        <span class="model-chip s">SPREAD</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-sport">🏈 Football</div>
+      <div class="card-title">NFL Models</div>
+      <div class="card-desc">EPA/play offense and defense, rest adjustments, weather factors for outdoor games. Infrastructure ready — in-season Sept 2026.</div>
+      <div class="card-models">
+        <span class="model-chip t">TOTALS</span>
+        <span class="model-chip m">MONEYLINE</span>
+        <span class="model-chip s">SPREAD</span>
+      </div>
+    </div>
+  </div>
+
+  <a class="cta" href="edgeos_combined.html">Open Dashboard →</a>
+
+  <div class="disclaimer">
+    <strong>Research tool only — not validated.</strong><br>
+    All models are in early development with zero graded bets. No picks have been verified against real outcomes. Do not use this to make betting decisions. Track results, calibrate, and wait for statistical significance before acting on any output.
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+*.cache
+xera_cache.json
+pitcher_stats_cache.json
+team_stats_cache.json
