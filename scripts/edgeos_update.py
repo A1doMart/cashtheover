@@ -1,18 +1,5 @@
-python#!/usr/bin/env python3
-"""EdgeOS daily slate updater — MLB + NBA + NFL.
-
-Pulls today's games, stats, and odds for all three sports and injects
-them into edgeos_combined.html so the site stays fresh every day.
-
-Data sources (all free or covered by one Odds API key):
-  MLB  : MLB Stats API + Baseball Savant xERA + The Odds API
-  NBA  : NBA Stats API team ratings + The Odds API schedule/odds
-  NFL  : The Odds API (offseason = empty slate; auto-populates in September)
-
-Usage:
-  python edgeos_update.py --template edgeos_combined.html --output edgeos_combined.html
-  python edgeos_update.py --template edgeos_combined.html --output edgeos_combined.html --date 2026-09-07
-"""
+#!/usr/bin/env python3
+"""EdgeOS daily slate updater — MLB + NBA + NFL."""
 
 from __future__ import annotations
 
@@ -36,23 +23,9 @@ CACHE_DIR  = SCRIPT_DIR / ".cache"
 MLB_SCHEDULE_URL   = "https://statsapi.mlb.com/api/v1/schedule"
 MLB_PERSON_STATS   = "https://statsapi.mlb.com/api/v1/people/{pid}/stats"
 MLB_TEAM_STATS_URL = "https://statsapi.mlb.com/api/v1/teams/{tid}/stats"
-MLB_SAVANT_PITCHER = (
-    "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
-    "?type=pitcher&year={year}&position=&team=&filterType=bip&min=0&csv=true"
-)
-MLB_SAVANT_TEAM = (
-    "https://baseballsavant.mlb.com/leaderboard/expected_statistics"
-    "?type=batter-team&year={year}&position=&team=&filterType=bip&min=0&csv=true"
-)
-NBA_TEAM_STATS_URL = (
-    "https://stats.nba.com/stats/leaguedashteamstats"
-    "?Conference=&DateFrom=&DateTo=&Division=&GameScope=&GameSegment="
-    "&LastNGames=0&LeagueID=00&Location=&MeasureType=Advanced&Month=0"
-    "&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=PerGame"
-    "&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N"
-    "&Season={season}&SeasonSegment=&SeasonType=Regular+Season"
-    "&ShotClockRange=&StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision="
-)
+MLB_SAVANT_PITCHER = "https://baseballsavant.mlb.com/leaderboard/expected_statistics?type=pitcher&year={year}&position=&team=&filterType=bip&min=0&csv=true"
+MLB_SAVANT_TEAM    = "https://baseballsavant.mlb.com/leaderboard/expected_statistics?type=batter-team&year={year}&position=&team=&filterType=bip&min=0&csv=true"
+NBA_TEAM_STATS_URL = "https://stats.nba.com/stats/leaguedashteamstats?Conference=&DateFrom=&DateTo=&Division=&GameScope=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Advanced&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season={season}&SeasonSegment=&SeasonType=Regular+Season&ShotClockRange=&StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision="
 NBA_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept": "application/json, text/plain, */*",
@@ -68,7 +41,7 @@ MLB_LG = {"era": 4.05, "k9": 8.4, "wrc": 100, "bull_era": 4.05}
 NBA_LG = {"offrtg": 116, "defrtg": 116, "pace": 98}
 
 
-def to_float(v: Any, default=None):
+def to_float(v, default=None):
     try: return float(v)
     except: return default
 
@@ -90,18 +63,15 @@ def write_cache(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
 
-def fetch_csv(session, url, cache_path, max_hours=20, extra_headers=None):
+def fetch_csv(session, url, cache_path, max_hours=20):
     cached = read_cache(cache_path, max_hours)
     if cached is None:
-        hdrs = dict(session.headers)
-        if extra_headers: hdrs.update(extra_headers)
         try:
-            r = session.get(url, headers=hdrs, timeout=30); r.raise_for_status()
+            r = session.get(url, timeout=30); r.raise_for_status()
             cached = r.text; write_cache(cache_path, cached)
         except Exception as e:
             print(f"  [warn] CSV {url[:60]}: {e}"); return []
     return list(csv.DictReader(io.StringIO(cached.lstrip("\ufeff"))))
-
 
 def fetch_odds(session, sport_key, api_key):
     if not api_key: return []
@@ -127,8 +97,7 @@ def parse_odds_game(og):
     home = og.get("home_team","")
     bks = og.get("bookmakers", [])
     if not bks: return out
-    bk = next((b for b in bks if "draftkings" in b.get("key","")), None) or \
-         next((b for b in bks if "fanduel"    in b.get("key","")), None) or bks[0]
+    bk = next((b for b in bks if "draftkings" in b.get("key","")), None) or bks[0]
     markets = {m["key"]: m for m in bk.get("markets",[])}
     if "h2h" in markets:
         for o in markets["h2h"].get("outcomes",[]):
@@ -140,10 +109,9 @@ def parse_odds_game(og):
             else: out["spread_away"]=int(o["price"])
     if "totals" in markets:
         for o in markets["totals"].get("outcomes",[]):
-            if o["name"]=="Over":  out["total"]=float(o.get("point",0)); out["total_over_odds"]=int(o["price"])
+            if o["name"]=="Over": out["total"]=float(o.get("point",0)); out["total_over_odds"]=int(o["price"])
             elif o["name"]=="Under": out["total_under_odds"]=int(o["price"])
     return out
-
 
 def mlb_pitcher_stats(session, pid, year):
     data = safe_get(session, MLB_PERSON_STATS.format(pid=pid),
@@ -165,21 +133,19 @@ def mlb_team_bull(session, tid, year):
     return {"bull_era": to_float((rp[0].get("stat",{}) if rp else {}).get("era"))}
 
 def savant_pitcher_index(session, year):
-    rows = fetch_csv(session, MLB_SAVANT_PITCHER.format(year=year),
-                     CACHE_DIR/f"savant_p_{year}.csv")
+    rows = fetch_csv(session, MLB_SAVANT_PITCHER.format(year=year), CACHE_DIR/f"savant_p_{year}.csv")
     idx = {}
     for r in rows:
         name = (r.get("last_name, first_name") or r.get("last_name","")).strip().lower()
-        pid  = str(r.get("player_id","")).strip()
+        pid = str(r.get("player_id","")).strip()
         xera = to_float(r.get("xera"))
         if name: idx[name] = xera
-        if pid:  idx[pid]  = xera
+        if pid: idx[pid] = xera
     return idx
 
 def savant_team_index(session, year):
-    rows = fetch_csv(session, MLB_SAVANT_TEAM.format(year=year),
-                     CACHE_DIR/f"savant_t_{year}.csv")
-    return {(r.get("team_name","")).strip().lower(): {
+    rows = fetch_csv(session, MLB_SAVANT_TEAM.format(year=year), CACHE_DIR/f"savant_t_{year}.csv")
+    return {r.get("team_name","").strip().lower(): {
         "wrc": to_float(r.get("wrc_plus") or r.get("wrc")),
         "hit_xwoba": to_float(r.get("xwoba")),
     } for r in rows if r.get("team_name")}
@@ -221,7 +187,7 @@ def build_mlb_games(session, target_date, odds_games):
             "home": home_name, "away": away_name,
             "home_pitcher": home_p, "away_pitcher": away_p,
             "home_era": home_s.get("era"), "away_era": away_s.get("era"),
-            "home_k9": home_s.get("k9"),  "away_k9": away_s.get("k9"),
+            "home_k9": home_s.get("k9"), "away_k9": away_s.get("k9"),
             "home_xera": get_xera(sav_p, home_prob, home_p),
             "away_xera": get_xera(sav_p, away_prob, away_p),
             "home_wrc": home_st.get("wrc") or MLB_LG["wrc"],
@@ -243,7 +209,6 @@ def build_mlb_games(session, target_date, odds_games):
         print(f"  [MLB] {away_name} @ {home_name} | line {line} | {away_p}/{home_p}")
     return games
 
-
 NBA_NAME_FIXES = {"Los Angeles Clippers": "LA Clippers"}
 
 def nba_season(d):
@@ -257,7 +222,7 @@ def fetch_nba_ratings(session, season):
         except: pass
     time.sleep(0.5)
     data = safe_get(session, NBA_TEAM_STATS_URL.format(season=season), headers=NBA_HEADERS)
-    if not isinstance(data, dict): print("  [NBA] Could not fetch team ratings."); return {}
+    if not isinstance(data, dict): print("  [NBA] Could not fetch ratings."); return {}
     rs = (data.get("resultSets") or [{}])[0]
     hdrs = {h:i for i,h in enumerate(rs.get("headers",[]))}
     ratings = {}
@@ -266,7 +231,7 @@ def fetch_nba_ratings(session, season):
         ratings[name] = {
             "offrtg": to_float(row[hdrs.get("OFF_RATING", hdrs.get("E_OFF_RATING",0))]),
             "defrtg": to_float(row[hdrs.get("DEF_RATING", hdrs.get("E_DEF_RATING",0))]),
-            "pace":   to_float(row[hdrs.get("PACE",       hdrs.get("E_PACE",0))]),
+            "pace":   to_float(row[hdrs.get("PACE", hdrs.get("E_PACE",0))]),
         }
     if ratings: cache.parent.mkdir(parents=True,exist_ok=True); cache.write_text(json.dumps(ratings))
     return ratings
@@ -290,11 +255,11 @@ def build_nba_games(session, target_date, odds_games):
             "away_offrtg": ar.get("offrtg") or NBA_LG["offrtg"],
             "home_defrtg": hr.get("defrtg") or NBA_LG["defrtg"],
             "away_defrtg": ar.get("defrtg") or NBA_LG["defrtg"],
-            "home_pace":   hr.get("pace")   or NBA_LG["pace"],
-            "away_pace":   ar.get("pace")   or NBA_LG["pace"],
+            "home_pace": hr.get("pace") or NBA_LG["pace"],
+            "away_pace": ar.get("pace") or NBA_LG["pace"],
             "rest_home": 1, "rest_away": 1,
             "total": odds.get("total"), "total_open": odds.get("total"),
-            "total_over_odds":  odds.get("total_over_odds")  or -110,
+            "total_over_odds": odds.get("total_over_odds") or -110,
             "total_under_odds": odds.get("total_under_odds") or -110,
             "spread": odds.get("spread"), "spread_open": odds.get("spread"),
             "spread_home": odds.get("spread_home") or -110,
@@ -306,9 +271,8 @@ def build_nba_games(session, target_date, odds_games):
         print(f"  [NBA] {away} @ {home} | total {g['total']} | spread {g['spread']}")
     return games
 
-
 def build_nfl_games(session, target_date, odds_games):
-    if not odds_games: print("  [NFL] No games (offseason or no key)."); return []
+    if not odds_games: print("  [NFL] No games."); return []
     games = []
     for og in odds_games:
         try:
@@ -323,19 +287,18 @@ def build_nfl_games(session, target_date, odds_games):
             "home_def_epa": None, "away_def_epa": None,
             "rest_home": 7, "rest_away": 7,
             "total": odds.get("total"), "total_open": odds.get("total"),
-            "total_over_odds":  odds.get("total_over_odds")  or -110,
+            "total_over_odds": odds.get("total_over_odds") or -110,
             "total_under_odds": odds.get("total_under_odds") or -110,
             "spread": odds.get("spread"), "spread_open": odds.get("spread"),
             "spread_home": odds.get("spread_home") or -110,
             "spread_away": odds.get("spread_away") or -110,
             "ml_home": odds.get("ml_home"), "ml_away": odds.get("ml_away"),
             "outdoor": True, "wind": None, "temp": None,
-            "note": f"Auto-fetched {target_date}. EPA stats unavailable — DQ will be lower.",
+            "note": f"Auto-fetched {target_date}. EPA unavailable — DQ will be lower.",
         }
         games.append(g)
         print(f"  [NFL] {away} @ {home} | total {g['total']} | spread {g['spread']}")
     return games
-
 
 def jsv(v):
     if v is None: return "null"
@@ -349,7 +312,7 @@ def games_js(games):
     return "[\n" + ",\n".join(rows) + "\n]"
 
 def inject_all(html, mlb, nba, nfl, d):
-    date_iso   = d.strftime("%Y-%m-%d")
+    date_iso = d.strftime("%Y-%m-%d")
     date_label = d.strftime("%b %d %Y").upper()
     pill_label = d.strftime("%b %d").upper()
 
@@ -357,35 +320,29 @@ def inject_all(html, mlb, nba, nfl, d):
         nonlocal html
         h, n = re.subn(pattern, block, html, count=1, flags=re.S)
         if n: html = h; print(f"  Injected {label}")
-        else: print(f"  [warn] Pattern not found: {label}")
+        else: print(f"  [warn] Not found: {label}")
 
-    replace(r"const RAW_GAMES = \[.*?\];",
-            f"const RAW_GAMES = {games_js(mlb)};", f"{len(mlb)} MLB games")
-    replace(r"const NBA_RAW_GAMES = \[.*?\];",
-            f"const NBA_RAW_GAMES = {games_js(nba)};", f"{len(nba)} NBA games")
-    replace(r"const NFL_RAW_GAMES = \[.*?\];",
-            f"const NFL_RAW_GAMES = {games_js(nfl)};", f"{len(nfl)} NFL games")
-
+    replace(r"const RAW_GAMES = \[.*?\];", f"const RAW_GAMES = {games_js(mlb)};", f"{len(mlb)} MLB games")
+    replace(r"const NBA_RAW_GAMES = \[.*?\];", f"const NBA_RAW_GAMES = {games_js(nba)};", f"{len(nba)} NBA games")
+    replace(r"const NFL_RAW_GAMES = \[.*?\];", f"const NFL_RAW_GAMES = {games_js(nfl)};", f"{len(nfl)} NFL games")
     html = re.sub(r"const SLATE_DATE = '[0-9-]+'", f"const SLATE_DATE = '{date_iso}'", html, 1)
     html = re.sub(r'id="pill-text">[^<]*</span>', f'id="pill-text">{len(mlb)} GAMES · {pill_label}</span>', html, 1)
     html = re.sub(r'(<span id="footer-date">)[^<]*(</span>)', rf'\g<1>{date_label}\g<2>', html, 1)
     html = re.sub(r'(<sub id="brand-sub">)[^<]*(</sub>)', rf'\g<1>v10+ML+RL | {date_iso}\g<2>', html, 1)
     return html
 
-
 def parse_args():
-    p = argparse.ArgumentParser(description=__doc__)
+    p = argparse.ArgumentParser()
     p.add_argument("--template", type=Path, required=True)
-    p.add_argument("--output",   type=Path, required=True)
+    p.add_argument("--output", type=Path, required=True)
     p.add_argument("--date", dest="target_date")
     p.add_argument("--refresh-cache", action="store_true")
     return p.parse_args()
 
-def main() -> int:
+def main():
     load_dotenv()
     args = parse_args()
-    target_date = (datetime.strptime(args.target_date, "%Y-%m-%d").date()
-                   if args.target_date else date.today())
+    target_date = datetime.strptime(args.target_date, "%Y-%m-%d").date() if args.target_date else date.today()
     print(f"\nEdgeOS slate updater | {target_date}")
     print("=" * 50)
     if not args.template.exists():
@@ -394,13 +351,12 @@ def main() -> int:
     session = requests.Session()
     session.headers.update({"User-Agent": "edgeos-updater/2.0"})
     api_key = os.getenv("ODDS_API_KEY")
-    if not api_key:
-        print("[warn] ODDS_API_KEY not set — odds fields will be null")
+    if not api_key: print("[warn] ODDS_API_KEY not set")
     print("\nFetching odds...")
     mlb_odds = fetch_odds(session, ODDS_SPORTS["mlb"], api_key)
     nba_odds = fetch_odds(session, ODDS_SPORTS["nba"], api_key)
     nfl_odds = fetch_odds(session, ODDS_SPORTS["nfl"], api_key)
-    print(f"  MLB:{len(mlb_odds)} NBA:{len(nba_odds)} NFL:{len(nfl_odds)} games from Odds API")
+    print(f"  MLB:{len(mlb_odds)} NBA:{len(nba_odds)} NFL:{len(nfl_odds)}")
     print("\nBuilding MLB slate...")
     mlb = build_mlb_games(session, target_date, mlb_odds)
     print("\nBuilding NBA slate...")
