@@ -290,14 +290,15 @@ def fetch_nba_ratings(session, season):
 
 def build_nba_games(session, target_date, odds_games):
     if not odds_games: print("  [NBA] No odds data."); return []
-    ratings = fetch_nba_ratings(session, nba_season(target_date))
-    if not ratings:
-        print("  [NBA] No ratings available — all games will use league averages (DQ will be lower)")
+    # NBA Stats API blocks cloud IPs — use league averages, real odds still work
+    ratings = {}
+    print("  [NBA] Using league averages for ratings (NBA Stats API blocks cloud servers)")
     games = []
     for og in odds_games:
         try:
             gd = datetime.fromisoformat(og.get("commence_time","").replace("Z","+00:00")).date()
-            if gd != target_date: continue
+            # Allow +/- 1 day window to handle UTC vs CT timezone differences
+            if abs((gd - target_date).days) > 1: continue
         except: pass
         home = NBA_NAME_FIXES.get(og.get("home_team",""), og.get("home_team",""))
         away = NBA_NAME_FIXES.get(og.get("away_team",""), og.get("away_team",""))
