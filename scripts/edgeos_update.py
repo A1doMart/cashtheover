@@ -439,8 +439,13 @@ def main() -> int:
     print("\nBuilding NFL slate...")
     nfl = build_nfl_games(session, target_date, nfl_odds)
 
+    print("\nFetching yesterday's scores...")
+    yscores = fetch_yesterday_scores(session, target_date)
+    print(f"  {len(yscores)} final scores found")
+
     print("\nInjecting into HTML...")
     html = inject_all(html, mlb, nba, nfl, target_date)
+    html = auto_grade_picks(html, yscores, target_date)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
