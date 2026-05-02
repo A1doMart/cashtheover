@@ -361,6 +361,85 @@ def build_nfl_games(session, target_date, odds_games):
 
 # ── HTML injection ───────────────────────────────────────────────────────────
 
+
+def fetch_yesterday_scores(session, target_date):
+    from datetime import timedelta
+    yesterday = target_date - timedelta(days=1)
+    date_str = yesterday.strftime("%Y-%m-%d")
+    data = safe_get(session, MLB_SCHEDULE_URL, params={
+        "sportId": 1, "date": date_str, "hydrate": "linescore,team"
+    })
+    if not data: return {}
+    games = ((data.get("dates") or [{}])[0]).get("games", [])
+    scores = {}
+    for g in games:
+        if g.get("status", {}).get("abstractGameState") != "Final": continue
+        home = g.get("teams", {}).get("home", {})
+        away = g.get("teams", {}).get("away", {})
+        hn = home.get("team", {}).get("name", "")
+        an = away.get("team", {}).get("name", "")
+        hs = home.get("score")
+        aws = away.get("score")
+        if hs is not None and aws is not None:
+            scores[an + "@" + hn] = {
+                "home": hn, "away": an,
+                "home_score": hs, "away_score": aws,
+                "total": hs + aws, "date": date_str
+            }
+            print(f"  [Score] {an} @ {hn}: {aws}-{hs} (total {hs+aws})")
+    return scores
+
+
+def auto_grade_picks(html, scores, target_date):
+    from datetime import timedelta
+    yesterday = (target_date - timedelta(days=1)).strftime("%Y-%m-%d")
+    if not scores:
+        return html
+    script_lines = [
+        "<script>",
+        "(function(){",
+        "  var scores=" + json.dumps(scores) + ";",
+        "  var yesterday='" + yesterday + "';",
+        "  function grade(key,type){",
+        "    try{",
+        "      var rows=JSON.parse(localStorage.getItem(key)||'[]');",
+        "      var changed=false;",
+        "      rows.forEach(function(r){",
+        "        if(r.result||r.date!==yesterday)return;",
+        "        var sc=scores[r.away+'@'+r.home];",
+        "        if(!sc)return;",
+        "        if(type==='totals'){",
+        "          var pick=(r.pick||'').toUpperCase();",
+        "          var line=parseFloat(r.line||0);",
+        "          var total=sc.total;",
+        "          if(total===line)r.result='PUSH';",
+        "          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';",
+        "          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';",
+        "          r.actual=total;",
+        "        }else{",
+        "          var side=(r.pick_side||'').toUpperCase();",
+        "          var hs=sc.home_score,as=sc.away_score;",
+        "          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';",
+        "          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';",
+        "        }",
+        "        if(r.result)changed=true;",
+        "      });",
+        "      if(changed)localStorage.setItem(key,JSON.stringify(rows));",
+        "    }catch(e){}",
+        "  }",
+        "  grade('edgeos-v10-today','totals');",
+        "  grade('edgeos-ml-v1-backtest','ml');",
+        "  grade('edgeos-rl-v1-backtest','rl');",
+        "})();",
+        "</script>",
+    ]
+    script = "\n".join(script_lines)
+    if "</body>" in html:
+        html = html.replace("</body>", script + "\n</body>", 1)
+        print(f"  Auto-grade injected for {yesterday} ({len(scores)} scores)")
+    return html
+
+
 def jsv(v):
     if v is None: return "null"
     if isinstance(v, bool): return "true" if v else "false"
@@ -443,8 +522,13 @@ def main() -> int:
     yscores = fetch_yesterday_scores(session, target_date)
     print(f"  {len(yscores)} final scores found")
 
+    print("\nFetching yesterday's scores...")
+    yscores = fetch_yesterday_scores(session, target_date)
+    print(f"  {len(yscores)} final scores found")
+
     print("\nInjecting into HTML...")
     html = inject_all(html, mlb, nba, nfl, target_date)
+    html = auto_grade_picks(html, yscores, target_date)
     html = auto_grade_picks(html, yscores, target_date)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
