@@ -390,15 +390,73 @@ def fetch_yesterday_scores(session, target_date):
     return scores
 
 
-def auto_grade_picks(html, scores, target_date):
+def fetch_yesterday_nba_scores(session, api_key, target_date):
+    """Fetch yesterday's NBA scores from The Odds API scores endpoint."""
+    from datetime import timedelta
+    if not api_key: return {}
+    yesterday = (target_date - timedelta(days=1)).strftime("%Y-%m-%d")
+    data = safe_get(session, "https://api.the-odds-api.com/v4/sports/basketball_nba/scores/", params={
+        "apiKey": api_key, "daysFrom": 1, "dateFormat": "iso"
+    })
+    if not isinstance(data, list): return {}
+    scores = {}
+    for g in data:
+        if not g.get("completed"): continue
+        home = g.get("home_team", "")
+        away = g.get("away_team", "")
+        home_score = None; away_score = None
+        for team in (g.get("scores") or []):
+            if team.get("name") == home: home_score = to_float(team.get("score"))
+            elif team.get("name") == away: away_score = to_float(team.get("score"))
+        if home_score is not None and away_score is not None:
+            key = away + "@" + home
+            scores[key] = {
+                "home": home, "away": away,
+                "home_score": home_score, "away_score": away_score,
+                "total": home_score + away_score, "date": yesterday
+            }
+            print(f"  [NBA Score] {away} @ {home}: {int(away_score)}-{int(home_score)} (total {int(home_score+away_score)})")
+    return scores
+
+
+def fetch_yesterday_nfl_scores(session, api_key, target_date):
+    """Fetch recent NFL scores from The Odds API scores endpoint."""
+    from datetime import timedelta
+    if not api_key: return {}
+    data = safe_get(session, "https://api.the-odds-api.com/v4/sports/americanfootball_nfl/scores/", params={
+        "apiKey": api_key, "daysFrom": 1, "dateFormat": "iso"
+    })
+    if not isinstance(data, list): return {}
+    scores = {}
+    for g in data:
+        if not g.get("completed"): continue
+        home = g.get("home_team", "")
+        away = g.get("away_team", "")
+        home_score = None; away_score = None
+        for team in (g.get("scores") or []):
+            if team.get("name") == home: home_score = to_float(team.get("score"))
+            elif team.get("name") == away: away_score = to_float(team.get("score"))
+        if home_score is not None and away_score is not None:
+            key = away + "@" + home
+            scores[key] = {
+                "home": home, "away": away,
+                "home_score": home_score, "away_score": away_score,
+                "total": home_score + away_score
+            }
+            print(f"  [NFL Score] {away} @ {home}: {int(away_score)}-{int(home_score)} (total {int(home_score+away_score)})")
+    return scores
+
+
+def auto_grade_picks(html, scores, target_date, nba_scores=None, nfl_scores=None):
     from datetime import timedelta
     yesterday = (target_date - timedelta(days=1)).strftime("%Y-%m-%d")
-    if not scores:
+    if not scores and not nba_scores and not nfl_scores:
         return html
+    all_scores = {**scores, **(nba_scores or {}), **(nfl_scores or {})}
     script_lines = [
         "<script>",
         "(function(){",
-        "  var scores=" + json.dumps(scores) + ";",
+        "  var scores=" + json.dumps({**scores, **(nba_scores or {})}) + ";",
         "  var yesterday='" + yesterday + "';",
         "  function grade(key,type){",
         "    try{",
@@ -524,11 +582,13 @@ def main() -> int:
 
     print("\nFetching yesterday's scores...")
     yscores = fetch_yesterday_scores(session, target_date)
-    print(f"  {len(yscores)} final scores found")
+    ynb_scores = fetch_yesterday_nba_scores(session, api_key, target_date)
+    ynfl_scores = fetch_yesterday_nfl_scores(session, api_key, target_date)
+    print(f"  {len(yscores)} MLB + {len(ynb_scores)} NBA + {len(ynfl_scores)} NFL final scores found")
 
     print("\nInjecting into HTML...")
     html = inject_all(html, mlb, nba, nfl, target_date)
-    html = auto_grade_picks(html, yscores, target_date)
+    html = auto_grade_picks(html, yscores, target_date, nba_scores=ynb_scores, nfl_scores=ynfl_scores)
     html = auto_grade_picks(html, yscores, target_date)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
