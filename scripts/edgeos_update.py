@@ -305,7 +305,9 @@ def fetch_nba_ratings(session, season):
     }
 
 def build_nba_games(session, target_date, odds_games):
-    if not odds_games: print("  [NBA] No odds data."); return []
+    if not odds_games:
+        print("  [NBA] No odds from API today — keeping existing slate in HTML")
+        return None  # None = don't overwrite existing games
     ratings = fetch_nba_ratings(session, nba_season(target_date))
     games = []
     for og in odds_games:
@@ -512,6 +514,77 @@ def auto_grade_picks(html, scores, target_date, nba_scores=None, nfl_scores=None
     return html
 
 
+
+# ── Injury data (ESPN unofficial API) ────────────────────────────────────────
+
+ESPN_NBA_INJURIES = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
+ESPN_NFL_INJURIES = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"
+
+# Impact on team ratings when key players are out/questionable
+INJURY_IMPACT = {
+    "out":          {"offrtg": -4.0, "defrtg": +2.0},
+    "doubtful":     {"offrtg": -2.5, "defrtg": +1.5},
+    "questionable": {"offrtg": -1.5, "defrtg": +1.0},
+}
+
+# Star player thresholds - only adjust for players averaging 18+ pts
+STAR_PPG_THRESHOLD = 18.0
+
+
+def fetch_nba_injuries(session):
+    """Fetch current NBA injury report from ESPN."""
+    data = safe_get(session, ESPN_NBA_INJURIES, timeout=10)
+    if not isinstance(data, dict):
+        return {}
+    injuries = {}
+    for team_entry in (data.get("injuries") or []):
+        team_name = team_entry.get("team", {}).get("displayName", "")
+        for injury in (team_entry.get("injuries") or []):
+            athlete = injury.get("athlete", {})
+            status = (injury.get("status") or "").lower()
+            ppg = to_float((athlete.get("statistics") or [{}])[0].get("value") if athlete.get("statistics") else None, 0)
+            if status in INJURY_IMPACT and ppg >= STAR_PPG_THRESHOLD:
+                if team_name not in injuries:
+                    injuries[team_name] = []
+                injuries[team_name].append({
+                    "name": athlete.get("displayName", ""),
+                    "status": status,
+                    "ppg": ppg,
+                })
+                print(f"  [Injury] {athlete.get('displayName','')} ({team_name}): {status} ({ppg} ppg)")
+    return injuries
+
+
+def apply_injury_adjustments(games, injuries):
+    """Adjust NBA team ratings based on injury report."""
+    if not injuries:
+        return games
+    adjusted = []
+    for g in games:
+        g = dict(g)
+        for side in ("home", "away"):
+            team = g.get(side, "")
+            team_injuries = injuries.get(team, [])
+            if not team_injuries:
+                continue
+            off_adj = 0.0
+            def_adj = 0.0
+            notes = []
+            for inj in team_injuries:
+                impact = INJURY_IMPACT.get(inj["status"], {})
+                off_adj += impact.get("offrtg", 0)
+                def_adj += impact.get("defrtg", 0)
+                notes.append(f"{inj['name']} {inj['status']}")
+            if off_adj != 0 or def_adj != 0:
+                g[f"{side}_offrtg"] = round((g.get(f"{side}_offrtg") or NBA_LG["offrtg"]) + off_adj, 1)
+                g[f"{side}_defrtg"] = round((g.get(f"{side}_defrtg") or NBA_LG["defrtg"]) + def_adj, 1)
+                inj_note = "; ".join(notes)
+                g["note"] = g.get("note", "") + f" INJURIES: {inj_note}."
+                print(f"  [Injury adj] {team}: ORtg {off_adj:+.1f}, DRtg {def_adj:+.1f} ({inj_note})")
+        adjusted.append(g)
+    return adjusted
+
+
 def jsv(v):
     if v is None: return "null"
     if isinstance(v, bool): return "true" if v else "false"
@@ -599,6 +672,7 @@ def main() -> int:
     ynb_scores = fetch_yesterday_nba_scores(session, api_key, target_date)
     ynfl_scores = fetch_yesterday_nfl_scores(session, api_key, target_date)
     print(f"  {len(yscores)} MLB + {len(ynb_scores)} NBA + {len(ynfl_scores)} NFL final scores found")
+    if nba is None: nba = []
 
     print("\nInjecting into HTML...")
     html = inject_all(html, mlb, nba, nfl, target_date)
