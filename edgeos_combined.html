@@ -251,9 +251,9 @@ body{padding:14px}
 <div class="wrap">
 
 <div class="hdr">
-  <div class="brand">EDGE<em>OS</em><sub id="brand-sub">v10+ML+RL | 2026-05-28</sub></div>
+  <div class="brand">EDGE<em>OS</em><sub id="brand-sub">v10+ML+RL | 2026-05-29</sub></div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <div class="live-pill"><span class="ldot"></span><span id="pill-text">6 GAMES · MAY 28</span></div>
+    <div class="live-pill"><span class="ldot"></span><span id="pill-text">15 GAMES · MAY 29</span></div>
     <button onclick="fetchTodaySlate()" style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:var(--c2);border:1px solid var(--b1);border-radius:999px;color:var(--t3);cursor:pointer" id="refresh-btn">⟳ REFRESH</button>
   </div>
 </div>
@@ -363,7 +363,7 @@ body{padding:14px}
 <div class="sumline" id="sumline">Loading...</div>
 <div id="cards"></div>
 
-<div class="footer" id="footer-text">EdgeOS v10+ML+RL | <span id="footer-date">MAY 28 2026</span> | Totals: Seeded NB MC | ML: Logit win prob | RL: Margin simulation | Research only — not validated</div>
+<div class="footer" id="footer-text">EdgeOS v10+ML+RL | <span id="footer-date">MAY 29 2026</span> | Totals: Seeded NB MC | ML: Logit win prob | RL: Margin simulation | Research only — not validated</div>
 
 </div><!-- /wrap -->
 <script>
@@ -917,12 +917,21 @@ function logRLPick(game, model) {
 // SHARED SLATE — APRIL 19 2026 — SUNDAY (15 games)
 // ════════════════════════════════════════════════════════════
 const RAW_GAMES = [
-  {home:'Detroit Tigers',away:'Los Angeles Angels',home_pitcher:'Jack Flaherty',away_pitcher:'Grayson Rodriguez',home_era:5.81,away_era:7.53,home_k9:11.03,away_k9:8.94,home_xera:5.04,away_xera:8.25,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Comerica Park',park_factor:100,line:7.5,line_open:7.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:970,ml_away:-3300,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-28. xERA from Savant. Odds from The Odds API.'},
-  {home:'Chicago White Sox',away:'Minnesota Twins',home_pitcher:'Davis Martin',away_pitcher:'Simeon Woods Richardson',home_era:1.92,away_era:7.74,home_k9:9.66,away_k9:4.96,home_xera:3.55,away_xera:5.96,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Rate Field',park_factor:100,line:9.5,line_open:9.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:null,ml_away:null,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-28. xERA from Savant. Odds from The Odds API.'},
-  {home:'Boston Red Sox',away:'Atlanta Braves',home_pitcher:'Payton Tolle',away_pitcher:'Chris Sale',home_era:2.45,away_era:1.89,home_k9:9.7,away_k9:10.45,home_xera:2.19,away_xera:3.05,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Fenway Park',park_factor:100,line:6.5,line_open:6.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:112,ml_away:-135,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-28. xERA from Savant. Odds from The Odds API.'},
-  {home:'Baltimore Orioles',away:'Toronto Blue Jays',home_pitcher:'Chris Bassitt',away_pitcher:'Patrick Corbin',home_era:5.51,away_era:3.86,home_k9:6.5,away_k9:6.53,home_xera:4.84,away_xera:5.38,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Oriole Park at Camden Yards',park_factor:100,line:8.5,line_open:8.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-131,ml_away:109,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-28. xERA from Savant. Odds from The Odds API.'},
-  {home:'Pittsburgh Pirates',away:'Chicago Cubs',home_pitcher:'Paul Skenes',away_pitcher:'Colin Rea',home_era:3.0,away_era:4.83,home_k9:9.75,away_k9:7.33,home_xera:2.4,away_xera:5.17,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'PNC Park',park_factor:100,line:7.5,line_open:7.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-175,ml_away:144,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-28. xERA from Savant. Odds from The Odds API.'},
-  {home:'Texas Rangers',away:'Houston Astros',home_pitcher:'Nathan Eovaldi',away_pitcher:'Spencer Arrighetti',home_era:3.65,away_era:1.32,home_k9:8.97,away_k9:8.78,home_xera:4.09,away_xera:4.78,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Globe Life Field',park_factor:100,line:7.5,line_open:7.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-136,ml_away:113,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-28. xERA from Savant. Odds from The Odds API.'}
+  {home:'Cincinnati Reds',away:'Atlanta Braves',home_pitcher:'Chris Paddack',away_pitcher:'Grant Holmes',home_era:6.86,away_era:3.78,home_k9:7.84,away_k9:8.29,home_xera:4.32,away_xera:4.17,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Great American Ball Park',park_factor:100,line:9.5,line_open:9.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:119,ml_away:-143,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Washington Nationals',away:'San Diego Padres',home_pitcher:'Paxton Schultz',away_pitcher:'Lucas Giolito',home_era:5.3,away_era:2.7,home_k9:10.38,away_k9:4.5,home_xera:4.23,away_xera:3.92,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Nationals Park',park_factor:100,line:9.0,line_open:9.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-120,ml_away:-101,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Pittsburgh Pirates',away:'Minnesota Twins',home_pitcher:'Jared Jones',away_pitcher:'Taj Bradley',home_era:null,away_era:2.77,home_k9:null,away_k9:10.21,home_xera:null,away_xera:3.63,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'PNC Park',park_factor:100,line:8.0,line_open:8.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-136,ml_away:113,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Baltimore Orioles',away:'Toronto Blue Jays',home_pitcher:'Trevor Rogers',away_pitcher:'TBD',home_era:6.96,away_era:null,home_k9:7.46,away_k9:null,home_xera:4.53,away_xera:null,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Oriole Park at Camden Yards',park_factor:100,line:9.0,line_open:9.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-118,ml_away:-102,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Cleveland Guardians',away:'Boston Red Sox',home_pitcher:'Slade Cecconi',away_pitcher:'Tyler Samaniego',home_era:5.18,away_era:1.04,home_k9:7.41,away_k9:6.84,home_xera:4.71,away_xera:4.74,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Progressive Field',park_factor:100,line:8.0,line_open:8.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-131,ml_away:108,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Tampa Bay Rays',away:'Los Angeles Angels',home_pitcher:'Nick Martinez',away_pitcher:'Walbert Ureña',home_era:1.51,away_era:2.58,home_k9:5.47,away_k9:8.5,home_xera:4.26,away_xera:3.3,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Tropicana Field',park_factor:100,line:8.0,line_open:8.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-163,ml_away:135,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'New York Mets',away:'Miami Marlins',home_pitcher:'Freddy Peralta',away_pitcher:'Max Meyer',home_era:3.52,away_era:2.52,home_k9:9.28,away_k9:10.17,home_xera:3.5,away_xera:3.79,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Citi Field',park_factor:100,line:7.5,line_open:7.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-115,ml_away:-105,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'St. Louis Cardinals',away:'Chicago Cubs',home_pitcher:'Andre Pallante',away_pitcher:'Shota Imanaga',home_era:3.76,away_era:4.04,home_k9:7.04,away_k9:9.39,home_xera:3.73,away_xera:3.4,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Busch Stadium',park_factor:100,line:7.5,line_open:7.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:110,ml_away:-132,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Chicago White Sox',away:'Detroit Tigers',home_pitcher:'Erick Fedde',away_pitcher:'Troy Melton',home_era:5.47,away_era:1.59,home_k9:5.68,away_k9:5.19,home_xera:4.68,away_xera:5.77,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Rate Field',park_factor:100,line:8.5,line_open:8.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-105,ml_away:-115,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Texas Rangers',away:'Kansas City Royals',home_pitcher:'MacKenzie Gore',away_pitcher:'Stephen Kolek',home_era:4.42,away_era:2.77,home_k9:10.15,away_k9:4.85,home_xera:3.81,away_xera:3.14,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Globe Life Field',park_factor:100,line:7.5,line_open:7.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-131,ml_away:109,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Houston Astros',away:'Milwaukee Brewers',home_pitcher:'Kai-Wei Teng',away_pitcher:'Coleman Crow',home_era:2.19,away_era:2.61,home_k9:8.76,away_k9:6.24,home_xera:3.55,away_xera:3.28,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Daikin Park',park_factor:100,line:8.5,line_open:8.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:101,ml_away:-122,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Colorado Rockies',away:'San Francisco Giants',home_pitcher:'Michael Lorenzen',away_pitcher:'Logan Webb',home_era:7.21,away_era:5.06,home_k9:6.94,away_k9:7.88,home_xera:5.88,away_xera:4.56,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Coors Field',park_factor:100,line:10.5,line_open:10.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:130,ml_away:-157,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Athletics',away:'New York Yankees',home_pitcher:'Luis Severino',away_pitcher:'Carlos Rodón',home_era:4.23,away_era:4.15,home_k9:9.41,away_k9:11.77,home_xera:4.09,away_xera:2.96,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'Sutter Health Park',park_factor:100,line:9.5,line_open:9.5,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:119,ml_away:-143,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Seattle Mariners',away:'Arizona Diamondbacks',home_pitcher:'George Kirby',away_pitcher:'Zac Gallen',home_era:3.54,away_era:4.8,home_k9:7.26,away_k9:6.65,home_xera:3.35,away_xera:4.87,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'T-Mobile Park',park_factor:100,line:7.0,line_open:7.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-144,ml_away:119,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'},
+  {home:'Los Angeles Dodgers',away:'Philadelphia Phillies',home_pitcher:'Justin Wrobleski',away_pitcher:'Zack Wheeler',home_era:3.07,away_era:1.67,home_k9:5.05,away_k9:8.71,home_xera:4.09,away_xera:3.16,home_wrc:100,away_wrc:100,home_hit_xwoba:null,away_hit_xwoba:null,home_bull_era:4.05,away_bull_era:4.05,park:'UNIQLO Field at Dodger Stadium',park_factor:100,line:8.0,line_open:8.0,wind:null,wind_dir:'calm',temp:null,elevation:0,ml_home:-120,ml_away:-101,rl_home:null,rl_away:null,rest_home:0,rest_away:0,form_home:0.5,form_away:0.5,rd_home:0,rd_away:0,note:'Auto-fetched 2026-05-29. xERA from Savant. Odds from The Odds API.'}
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -1164,9 +1173,7 @@ function projectNFLGame(raw){
 // ════════════════════════════════════════════════════════════
 // NBA SLATE — April 19 2026
 // ════════════════════════════════════════════════════════════
-const NBA_RAW_GAMES = [
-  {home:'San Antonio Spurs',away:'Oklahoma City Thunder',home_offrtg:119.4,away_offrtg:118.9,home_defrtg:111.5,away_defrtg:107.3,home_pace:99.8,away_pace:99.1,rest_home:1,rest_away:1,total:218.5,total_open:218.5,total_over_odds:-110,total_under_odds:-110,spread:-3.5,spread_open:-3.5,spread_home:-110,spread_away:-110,ml_home:-155,ml_away:130,note:'Auto-fetched 2026-05-28. Ratings: NBA Stats API. Odds: The Odds API.'}
-];
+const NBA_RAW_GAMES = [];
 let NBA_CURRENT_SLATE = NBA_RAW_GAMES;
 
 // ════════════════════════════════════════════════════════════
@@ -1615,7 +1622,7 @@ document.getElementById('coverage-threshold').textContent=`${Math.round(HISTORY_
 // ════════════════════════════════════════════════════════════
 // AUTO-FETCH — MLB Stats API
 // ════════════════════════════════════════════════════════════
-const SLATE_DATE = '2026-05-28';
+const SLATE_DATE = '2026-05-29';
 let CURRENT_SLATE_DATE = SLATE_DATE;
 function localDate(){return new Date().toLocaleDateString('en-CA',{timeZone:'America/Chicago'});}
 function slateDate(){return CURRENT_SLATE_DATE;}
@@ -2812,6 +2819,78 @@ checkDateAndFetch();
 (function(){
   var scores={"Miami Marlins@Toronto Blue Jays": {"home": "Toronto Blue Jays", "away": "Miami Marlins", "home_score": 2, "away_score": 1, "total": 3, "date": "2026-05-27"}, "Washington Nationals@Cleveland Guardians": {"home": "Cleveland Guardians", "away": "Washington Nationals", "home_score": 3, "away_score": 2, "total": 5, "date": "2026-05-27"}, "St. Louis Cardinals@Milwaukee Brewers": {"home": "Milwaukee Brewers", "away": "St. Louis Cardinals", "home_score": 2, "away_score": 1, "total": 3, "date": "2026-05-27"}, "Seattle Mariners@Athletics": {"home": "Athletics", "away": "Seattle Mariners", "home_score": 1, "away_score": 9, "total": 10, "date": "2026-05-27"}, "Arizona Diamondbacks@San Francisco Giants": {"home": "San Francisco Giants", "away": "Arizona Diamondbacks", "home_score": 2, "away_score": 3, "total": 5, "date": "2026-05-27"}, "Philadelphia Phillies@San Diego Padres": {"home": "San Diego Padres", "away": "Philadelphia Phillies", "home_score": 0, "away_score": 3, "total": 3, "date": "2026-05-27"}, "Tampa Bay Rays@Baltimore Orioles": {"home": "Baltimore Orioles", "away": "Tampa Bay Rays", "home_score": 11, "away_score": 2, "total": 13, "date": "2026-05-27"}, "Los Angeles Angels@Detroit Tigers": {"home": "Detroit Tigers", "away": "Los Angeles Angels", "home_score": 4, "away_score": 0, "total": 4, "date": "2026-05-27"}, "Chicago Cubs@Pittsburgh Pirates": {"home": "Pittsburgh Pirates", "away": "Chicago Cubs", "home_score": 4, "away_score": 10, "total": 14, "date": "2026-05-27"}, "Atlanta Braves@Boston Red Sox": {"home": "Boston Red Sox", "away": "Atlanta Braves", "home_score": 8, "away_score": 0, "total": 8, "date": "2026-05-27"}, "Cincinnati Reds@New York Mets": {"home": "New York Mets", "away": "Cincinnati Reds", "home_score": 4, "away_score": 2, "total": 6, "date": "2026-05-27"}, "Minnesota Twins@Chicago White Sox": {"home": "Chicago White Sox", "away": "Minnesota Twins", "home_score": 15, "away_score": 2, "total": 17, "date": "2026-05-27"}, "New York Yankees@Kansas City Royals": {"home": "Kansas City Royals", "away": "New York Yankees", "home_score": 0, "away_score": 7, "total": 7, "date": "2026-05-27"}, "Houston Astros@Texas Rangers": {"home": "Texas Rangers", "away": "Houston Astros", "home_score": 3, "away_score": 4, "total": 7, "date": "2026-05-27"}, "Colorado Rockies@Los Angeles Dodgers": {"home": "Los Angeles Dodgers", "away": "Colorado Rockies", "home_score": 4, "away_score": 1, "total": 5, "date": "2026-05-27"}};
   var yesterday='2026-05-27';
+  function grade(key,type){
+    try{
+      var rows=JSON.parse(localStorage.getItem(key)||'[]');
+      var changed=false;
+      rows.forEach(function(r){
+        if(r.result||r.date!==yesterday)return;
+        var sc=scores[r.away+'@'+r.home];
+        if(!sc)return;
+        if(type==='totals'){
+          var pick=(r.pick||'').toUpperCase();
+          var line=parseFloat(r.line||0);
+          var total=sc.total;
+          if(total===line)r.result='PUSH';
+          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';
+          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';
+          r.actual=total;
+        }else{
+          var side=(r.pick_side||'').toUpperCase();
+          var hs=sc.home_score,as=sc.away_score;
+          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';
+          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';
+        }
+        if(r.result)changed=true;
+      });
+      if(changed)localStorage.setItem(key,JSON.stringify(rows));
+    }catch(e){}
+  }
+  grade('edgeos-v10-today','totals');
+  grade('edgeos-ml-v1-backtest','ml');
+  grade('edgeos-rl-v1-backtest','rl');
+})();
+</script>
+<script>
+(function(){
+  var scores={"Los Angeles Angels@Detroit Tigers": {"home": "Detroit Tigers", "away": "Los Angeles Angels", "home_score": 1, "away_score": 7, "total": 8, "date": "2026-05-28"}, "Minnesota Twins@Chicago White Sox": {"home": "Chicago White Sox", "away": "Minnesota Twins", "home_score": 6, "away_score": 2, "total": 8, "date": "2026-05-28"}, "Atlanta Braves@Boston Red Sox": {"home": "Boston Red Sox", "away": "Atlanta Braves", "home_score": 2, "away_score": 10, "total": 12, "date": "2026-05-28"}, "Toronto Blue Jays@Baltimore Orioles": {"home": "Baltimore Orioles", "away": "Toronto Blue Jays", "home_score": 1, "away_score": 2, "total": 3, "date": "2026-05-28"}, "Chicago Cubs@Pittsburgh Pirates": {"home": "Pittsburgh Pirates", "away": "Chicago Cubs", "home_score": 2, "away_score": 7, "total": 9, "date": "2026-05-28"}, "Houston Astros@Texas Rangers": {"home": "Texas Rangers", "away": "Houston Astros", "home_score": 1, "away_score": 5, "total": 6, "date": "2026-05-28"}, "Oklahoma City Thunder@San Antonio Spurs": {"home": "San Antonio Spurs", "away": "Oklahoma City Thunder", "home_score": 118.0, "away_score": 91.0, "total": 209.0, "date": "2026-05-28"}};
+  var yesterday='2026-05-28';
+  function grade(key,type){
+    try{
+      var rows=JSON.parse(localStorage.getItem(key)||'[]');
+      var changed=false;
+      rows.forEach(function(r){
+        if(r.result||r.date!==yesterday)return;
+        var sc=scores[r.away+'@'+r.home];
+        if(!sc)return;
+        if(type==='totals'){
+          var pick=(r.pick||'').toUpperCase();
+          var line=parseFloat(r.line||0);
+          var total=sc.total;
+          if(total===line)r.result='PUSH';
+          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';
+          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';
+          r.actual=total;
+        }else{
+          var side=(r.pick_side||'').toUpperCase();
+          var hs=sc.home_score,as=sc.away_score;
+          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';
+          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';
+        }
+        if(r.result)changed=true;
+      });
+      if(changed)localStorage.setItem(key,JSON.stringify(rows));
+    }catch(e){}
+  }
+  grade('edgeos-v10-today','totals');
+  grade('edgeos-ml-v1-backtest','ml');
+  grade('edgeos-rl-v1-backtest','rl');
+})();
+</script>
+<script>
+(function(){
+  var scores={"Los Angeles Angels@Detroit Tigers": {"home": "Detroit Tigers", "away": "Los Angeles Angels", "home_score": 1, "away_score": 7, "total": 8, "date": "2026-05-28"}, "Minnesota Twins@Chicago White Sox": {"home": "Chicago White Sox", "away": "Minnesota Twins", "home_score": 6, "away_score": 2, "total": 8, "date": "2026-05-28"}, "Atlanta Braves@Boston Red Sox": {"home": "Boston Red Sox", "away": "Atlanta Braves", "home_score": 2, "away_score": 10, "total": 12, "date": "2026-05-28"}, "Toronto Blue Jays@Baltimore Orioles": {"home": "Baltimore Orioles", "away": "Toronto Blue Jays", "home_score": 1, "away_score": 2, "total": 3, "date": "2026-05-28"}, "Chicago Cubs@Pittsburgh Pirates": {"home": "Pittsburgh Pirates", "away": "Chicago Cubs", "home_score": 2, "away_score": 7, "total": 9, "date": "2026-05-28"}, "Houston Astros@Texas Rangers": {"home": "Texas Rangers", "away": "Houston Astros", "home_score": 1, "away_score": 5, "total": 6, "date": "2026-05-28"}};
+  var yesterday='2026-05-28';
   function grade(key,type){
     try{
       var rows=JSON.parse(localStorage.getItem(key)||'[]');
