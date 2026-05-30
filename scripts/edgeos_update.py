@@ -472,7 +472,7 @@ def auto_grade_picks(html, scores, target_date, nba_scores=None, nfl_scores=None
     script_lines = [
         "<script>",
         "(function(){",
-        "  var scores=" + json.dumps({**scores, **(nba_scores or {})}) + ";",
+        "  var scores=" + json.dumps(all_scores) + ";",
         "  var yesterday='" + yesterday + "';",
         "  function grade(key,type){",
         "    try{",
@@ -490,6 +490,12 @@ def auto_grade_picks(html, scores, target_date, nba_scores=None, nfl_scores=None
         "          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';",
         "          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';",
         "          r.actual=total;",
+        "        }else if(type==='rl'){",
+        "          var mg=sc.home_score-sc.away_score;",
+        "          var pk=(r.pick||'');",
+        "          if(pk.indexOf('+1.5')>=0)r.result=mg<=1?'COVER':'MISS';",
+        "          else if(pk.indexOf('-1.5')>=0)r.result=mg>=2?'COVER':'MISS';",
+        "          else{var sd=(r.pick_side||'').toUpperCase();r.result=sd==='HOME'?(mg>=2?'COVER':'MISS'):(mg<=-2?'COVER':'MISS');}",
         "        }else{",
         "          var side=(r.pick_side||'').toUpperCase();",
         "          var hs=sc.home_score,as=sc.away_score;",
@@ -609,8 +615,11 @@ def inject_all(html, mlb, nba, nfl, d: date):
 
     replace(r"const RAW_GAMES = \[.*?\];",
             f"const RAW_GAMES = {games_js(mlb)};", f"{len(mlb)} MLB games")
-    replace(r"const NBA_RAW_GAMES = \[.*?\];",
-            f"const NBA_RAW_GAMES = {games_js(nba)};", f"{len(nba)} NBA games")
+    if nba is not None:
+        replace(r"const NBA_RAW_GAMES = \[.*?\];",
+                f"const NBA_RAW_GAMES = {games_js(nba)};", f"{len(nba)} NBA games")
+    else:
+        print("  Preserved existing NBA slate")
     replace(r"const NFL_RAW_GAMES = \[.*?\];",
             f"const NFL_RAW_GAMES = {games_js(nfl)};", f"{len(nfl)} NFL games")
 
@@ -665,19 +674,13 @@ def main() -> int:
 
     print("\nFetching yesterday's scores...")
     yscores = fetch_yesterday_scores(session, target_date)
-    print(f"  {len(yscores)} final scores found")
-
-    print("\nFetching yesterday's scores...")
-    yscores = fetch_yesterday_scores(session, target_date)
     ynb_scores = fetch_yesterday_nba_scores(session, api_key, target_date)
     ynfl_scores = fetch_yesterday_nfl_scores(session, api_key, target_date)
     print(f"  {len(yscores)} MLB + {len(ynb_scores)} NBA + {len(ynfl_scores)} NFL final scores found")
-    if nba is None: nba = []
 
     print("\nInjecting into HTML...")
     html = inject_all(html, mlb, nba, nfl, target_date)
     html = auto_grade_picks(html, yscores, target_date, nba_scores=ynb_scores, nfl_scores=ynfl_scores)
-    html = auto_grade_picks(html, yscores, target_date)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
