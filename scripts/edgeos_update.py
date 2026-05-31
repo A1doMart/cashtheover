@@ -257,6 +257,99 @@ def parse_odds_game(og: Dict) -> Dict:
     return out
 
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PRIORITY A: STADIUM + PARK FACTOR MAPPING
+# Static table — update park factors each spring from Fangraphs/BBREF.
+# Elevation in feet. Park factor: 100 = league average, >100 = hitter friendly.
+# is_indoor: True for full domes and retractable roofs (weather irrelevant).
+# weather_city: used for wttr.in lookup. Use nearest major city if park is
+#   in a suburb (e.g. Truist Park is in Cumberland GA, use "Atlanta").
+# ══════════════════════════════════════════════════════════════════════════════
+
+MLB_STADIUMS: Dict[str, Dict] = {
+    # AL East
+    "Boston Red Sox":         {"park": "Fenway Park",          "city": "Boston",       "lat": 42.35, "lon": -71.10, "park_factor": 104, "elevation": 20,   "is_indoor": False},
+    "New York Yankees":       {"park": "Yankee Stadium",       "city": "New York",     "lat": 40.83, "lon": -73.93, "park_factor": 101, "elevation": 55,   "is_indoor": False},
+    "Tampa Bay Rays":         {"park": "Tropicana Field",      "city": "St. Petersburg","lat": 27.77, "lon": -82.65, "park_factor": 97,  "elevation": 44,   "is_indoor": True},
+    "Toronto Blue Jays":      {"park": "Rogers Centre",        "city": "Toronto",      "lat": 43.64, "lon": -79.39, "park_factor": 100, "elevation": 300,  "is_indoor": True},
+    "Baltimore Orioles":      {"park": "Oriole Park",          "city": "Baltimore",    "lat": 39.28, "lon": -76.62, "park_factor": 100, "elevation": 100,  "is_indoor": False},
+    # AL Central
+    "Chicago White Sox":      {"park": "Guaranteed Rate Field","city": "Chicago",      "lat": 41.83, "lon": -87.63, "park_factor": 97,  "elevation": 594,  "is_indoor": False},
+    "Cleveland Guardians":    {"park": "Progressive Field",    "city": "Cleveland",    "lat": 41.50, "lon": -81.68, "park_factor": 99,  "elevation": 653,  "is_indoor": False},
+    "Detroit Tigers":         {"park": "Comerica Park",        "city": "Detroit",      "lat": 42.34, "lon": -83.05, "park_factor": 97,  "elevation": 600,  "is_indoor": False},
+    "Kansas City Royals":     {"park": "Kauffman Stadium",     "city": "Kansas City",  "lat": 39.05, "lon": -94.48, "park_factor": 98,  "elevation": 750,  "is_indoor": False},
+    "Minnesota Twins":        {"park": "Target Field",         "city": "Minneapolis",  "lat": 44.98, "lon": -93.28, "park_factor": 101, "elevation": 815,  "is_indoor": False},
+    # AL West
+    "Houston Astros":         {"park": "Minute Maid Park",     "city": "Houston",      "lat": 29.76, "lon": -95.36, "park_factor": 98,  "elevation": 43,   "is_indoor": True},
+    "Los Angeles Angels":     {"park": "Angel Stadium",        "city": "Anaheim",      "lat": 33.80, "lon": -117.88,"park_factor": 98,  "elevation": 160,  "is_indoor": False},
+    "Oakland Athletics":      {"park": "Oakland Coliseum",     "city": "Oakland",      "lat": 37.75, "lon": -122.20,"park_factor": 97,  "elevation": 25,   "is_indoor": False},
+    "Athletics":              {"park": "Oakland Coliseum",     "city": "Oakland",      "lat": 37.75, "lon": -122.20,"park_factor": 97,  "elevation": 25,   "is_indoor": False},
+    "Seattle Mariners":       {"park": "T-Mobile Park",        "city": "Seattle",      "lat": 47.59, "lon": -122.33,"park_factor": 96,  "elevation": 175,  "is_indoor": False},
+    "Texas Rangers":          {"park": "Globe Life Field",     "city": "Arlington",    "lat": 32.75, "lon": -97.08, "park_factor": 102, "elevation": 551,  "is_indoor": True},
+    # NL East
+    "Atlanta Braves":         {"park": "Truist Park",          "city": "Atlanta",      "lat": 33.89, "lon": -84.47, "park_factor": 100, "elevation": 1050, "is_indoor": False},
+    "Miami Marlins":          {"park": "LoanDepot park",       "city": "Miami",        "lat": 25.78, "lon": -80.22, "park_factor": 95,  "elevation": 6,    "is_indoor": True},
+    "New York Mets":          {"park": "Citi Field",           "city": "New York",     "lat": 40.76, "lon": -73.84, "park_factor": 98,  "elevation": 55,   "is_indoor": False},
+    "Philadelphia Phillies":  {"park": "Citizens Bank Park",   "city": "Philadelphia", "lat": 39.91, "lon": -75.17, "park_factor": 103, "elevation": 20,   "is_indoor": False},
+    "Washington Nationals":   {"park": "Nationals Park",       "city": "Washington",   "lat": 38.87, "lon": -77.01, "park_factor": 99,  "elevation": 25,   "is_indoor": False},
+    # NL Central
+    "Chicago Cubs":           {"park": "Wrigley Field",        "city": "Chicago",      "lat": 41.95, "lon": -87.66, "park_factor": 104, "elevation": 594,  "is_indoor": False},
+    "Cincinnati Reds":        {"park": "Great American Ball Park","city": "Cincinnati", "lat": 39.10, "lon": -84.51, "park_factor": 106, "elevation": 480,  "is_indoor": False},
+    "Milwaukee Brewers":      {"park": "American Family Field", "city": "Milwaukee",   "lat": 43.03, "lon": -87.97, "park_factor": 99,  "elevation": 635,  "is_indoor": False},
+    "Pittsburgh Pirates":     {"park": "PNC Park",             "city": "Pittsburgh",   "lat": 40.45, "lon": -80.01, "park_factor": 98,  "elevation": 730,  "is_indoor": False},
+    "St. Louis Cardinals":    {"park": "Busch Stadium",        "city": "St. Louis",    "lat": 38.62, "lon": -90.19, "park_factor": 97,  "elevation": 466,  "is_indoor": False},
+    # NL West
+    "Arizona Diamondbacks":   {"park": "Chase Field",          "city": "Phoenix",      "lat": 33.45, "lon": -112.07,"park_factor": 101, "elevation": 1086, "is_indoor": True},
+    "Colorado Rockies":       {"park": "Coors Field",          "city": "Denver",       "lat": 39.76, "lon": -104.99,"park_factor": 115, "elevation": 5200, "is_indoor": False},
+    "Los Angeles Dodgers":    {"park": "Dodger Stadium",       "city": "Los Angeles",  "lat": 34.07, "lon": -118.24,"park_factor": 98,  "elevation": 512,  "is_indoor": False},
+    "San Diego Padres":       {"park": "Petco Park",           "city": "San Diego",    "lat": 32.71, "lon": -117.16,"park_factor": 94,  "elevation": 62,   "is_indoor": False},
+    "San Francisco Giants":   {"park": "Oracle Park",          "city": "San Francisco","lat": 37.78, "lon": -122.39,"park_factor": 95,  "elevation": 15,   "is_indoor": False},
+}
+
+
+def get_stadium(home_team: str) -> Dict:
+    """Look up stadium info for a home team. Returns safe defaults if not found."""
+    return MLB_STADIUMS.get(home_team, {
+        "park": home_team, "city": home_team, "lat": None, "lon": None,
+        "park_factor": 100, "elevation": 0, "is_indoor": False,
+    })
+
+
+def fetch_weather(session, city: str, lat: Optional[float], lon: Optional[float],
+                  is_indoor: bool) -> Dict:
+    """
+    Fetch current weather from wttr.in (free, no API key required).
+    Returns wind (mph), wind_dir (string), temp (F).
+    Falls back to None values if fetch fails — model degrades gracefully.
+    Indoor parks always return calm/None weather (irrelevant for model).
+    """
+    if is_indoor:
+        # Indoor parks: weather is genuinely irrelevant, not missing
+        return {"wind": 0, "wind_dir": "indoor", "temp": None}
+
+    if not city:
+        return {"wind": None, "wind_dir": None, "temp": None}
+
+    try:
+        url = f"https://wttr.in/{city.replace(' ', '+')}?format=j1"
+        r = session.get(url, timeout=8)
+        r.raise_for_status()
+        d = r.json()
+        cc = d.get("current_condition", [{}])[0]
+        wind_mph = to_float(cc.get("windspeedMiles"))
+        wind_dir = cc.get("winddir16Point", "").lower()   # e.g. "NW", "SSW"
+        temp_f   = to_float(cc.get("temp_F"))
+        # Normalize wind direction to model-compatible strings
+        # Model uses: "out to cf", "in from cf", or compass bearing
+        # wttr gives 16-point compass — keep raw, model handles it
+        return {"wind": wind_mph, "wind_dir": wind_dir, "temp": temp_f}
+    except Exception as e:
+        # Weather fetch failed — log but don't crash; model will treat as unknown
+        print(f"    [weather warn] {city}: {e}")
+        return {"wind": None, "wind_dir": None, "temp": None}
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # MLB — build / inject / grade
 # ══════════════════════════════════════════════════════════════════════════════
@@ -273,12 +366,28 @@ def mlb_pitcher_stats(session, pid: int, year: int) -> Dict:
     return {"era": to_float(s.get("era")), "k9": round(so / ip * 9, 2) if ip > 0 else None}
 
 def mlb_team_bull(session, tid: int, year: int) -> Dict:
+    """
+    Fetch team bullpen ERA for the season.
+    Returns {"bull_era": float | None, "bull_era_recent": None}.
+
+    bull_era_recent is reserved for last-14-day reliever ERA.
+    MLB Stats API does not expose a clean recent-ERA endpoint for bullpens
+    without iterating all relievers individually (expensive and flaky).
+    If you later add a Savant bulk reliever CSV or a paid API, plug
+    the result in here and the model will use it automatically.
+    """
     data = safe_get(session, MLB_TEAM_STATS_URL.format(tid=tid),
                     params={"stats": "season", "group": "pitching", "season": year})
-    if not data: return {}
+    if not data: return {"bull_era": None, "bull_era_recent": None}
     splits = ((data.get("stats") or [{}])[0]).get("splits", [])
     rp = [sp for sp in splits if sp.get("position", {}).get("abbreviation") == "RP"]
-    return {"bull_era": to_float((rp[0].get("stat", {}) if rp else {}).get("era"))}
+    season_era = to_float((rp[0].get("stat", {}) if rp else {}).get("era"))
+    return {
+        "bull_era": season_era,
+        # bull_era_recent: placeholder — plug in last-14-day ERA when available.
+        # Until then, model falls back to season ERA (see build_mlb).
+        "bull_era_recent": None,
+    }
 
 def savant_pitcher_index(session, year: int) -> Dict:
     rows = fetch_csv(session, MLB_SAVANT_PITCHER.format(year=year),
@@ -351,6 +460,30 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
             odds = match_odds(odds_games, home_name, away_name)
             line = odds.get("total") or 8.5
 
+            # ── Stadium: park factor, elevation, weather city ──────────────
+            stadium    = get_stadium(home_name)
+            park_factor = stadium["park_factor"]
+            elevation   = stadium["elevation"]
+            is_indoor   = stadium["is_indoor"]
+
+            # ── Weather: real data or honest None (never fake calm) ────────
+            wx = fetch_weather(session, stadium["city"], stadium["lat"],
+                               stadium["lon"], is_indoor)
+
+            # ── Bullpen: prefer recent ERA when available ──────────────────
+            # bull_era_recent is None until we add a last-14-day data source.
+            # Model JS uses home_bull_era; when recency data is available,
+            # swap to home_bull_era_recent here.
+            home_bull_era_use = (home_bull.get("bull_era_recent")
+                                 or home_bull.get("bull_era")
+                                 or MLB_LG["bull_era"])
+            away_bull_era_use = (away_bull.get("bull_era_recent")
+                                 or away_bull.get("bull_era")
+                                 or MLB_LG["bull_era"])
+
+            # ── Market: no-bet flag when totals market is missing ──────────
+            has_market = odds.get("total") is not None
+
             g = {
                 "home": home_name, "away": away_name,
                 "home_pitcher": home_p, "away_pitcher": away_p,
@@ -362,16 +495,30 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
                 "away_wrc": away_st.get("wrc") or MLB_LG["wrc"],
                 "home_hit_xwoba": home_st.get("hit_xwoba"),
                 "away_hit_xwoba": away_st.get("hit_xwoba"),
-                "home_bull_era": home_bull.get("bull_era") or MLB_LG["bull_era"],
-                "away_bull_era": away_bull.get("bull_era") or MLB_LG["bull_era"],
-                "park": (game.get("venue") or {}).get("name"),
-                "park_factor": 100, "line": line, "line_open": line,
-                "wind": None, "wind_dir": "calm", "temp": None, "elevation": 0,
+                "home_bull_era": home_bull_era_use,
+                "away_bull_era": away_bull_era_use,
+                "park": stadium["park"],
+                "park_factor": park_factor,
+                "elevation": elevation,
+                "line": line, "line_open": line,
+                # Real weather — None when unavailable, 0/indoor for domes
+                "wind": wx["wind"], "wind_dir": wx["wind_dir"], "temp": wx["temp"],
                 "ml_home": odds.get("ml_home"), "ml_away": odds.get("ml_away"),
                 "rl_home": odds.get("rl_home"), "rl_away": odds.get("rl_away"),
+                # Side-specific over/under prices (Priority C)
+                "total_over_odds":  odds.get("total_over_odds"),
+                "total_under_odds": odds.get("total_under_odds"),
+                # no_market flag: JS model forces NO BET when True
+                "no_market": not has_market,
                 "rest_home": 0, "rest_away": 0,
                 "form_home": 0.5, "form_away": 0.5, "rd_home": 0, "rd_away": 0,
-                "note": f"Auto-fetched {target_date}. xERA from Savant. Odds from The Odds API.",
+                "note": (
+                    f"Auto-fetched {target_date}. xERA from Savant. Odds from The Odds API."
+                    + (f" Park: {stadium['park']} (PF {park_factor}, elev {elevation}ft)." if park_factor != 100 or elevation > 0 else "")
+                    + (f" Weather: {wx['wind']}mph {wx['wind_dir']}, {wx['temp']}F." if wx["wind"] is not None and not is_indoor else "")
+                    + (" INDOOR PARK — weather irrelevant." if is_indoor else "")
+                    + (" NO MARKET — model will force NO BET on totals." if not has_market else "")
+                ),
             }
             games.append(g)
             print(f"  [MLB] {away_name} @ {home_name} | line {line} | {away_p}/{home_p}")
