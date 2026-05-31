@@ -308,6 +308,74 @@ MLB_STADIUMS: Dict[str, Dict] = {
 }
 
 
+
+# Wind orientation: compass bearing the ball travels when hit to CF.
+# e.g. Wrigley CF faces ~NE, so NE wind = blowing OUT (over-friendly).
+# Used to convert wttr.in compass bearing to "out"/"in"/"cross" for the model.
+# Source: stadium blueprints + satellite orientation. Approximate (±20 degrees).
+PARK_CF_BEARING: Dict[str, int] = {
+    "Boston Red Sox":        68,   # Fenway — CF faces ENE
+    "New York Yankees":      10,   # Yankee Stadium — CF faces N
+    "Baltimore Orioles":     35,   # Oriole Park — CF faces NNE
+    "Chicago White Sox":     340,  # Guaranteed Rate — CF faces NNW
+    "Cleveland Guardians":   15,   # Progressive — CF faces NNE
+    "Detroit Tigers":        320,  # Comerica — CF faces NW
+    "Kansas City Royals":    355,  # Kauffman — CF faces N
+    "Minnesota Twins":       10,   # Target Field — CF faces N
+    "Los Angeles Angels":    300,  # Angel Stadium — CF faces WNW
+    "Seattle Mariners":      25,   # T-Mobile — CF faces NNE
+    "Atlanta Braves":        345,  # Truist — CF faces NNW
+    "New York Mets":         5,    # Citi Field — CF faces N
+    "Philadelphia Phillies": 5,    # Citizens Bank — CF faces N
+    "Washington Nationals":  355,  # Nationals Park — CF faces N
+    "Chicago Cubs":          45,   # Wrigley — CF faces NE (classic out-blower)
+    "Cincinnati Reds":       350,  # GABP — CF faces N
+    "Milwaukee Brewers":     355,  # AmFam — CF faces N
+    "Pittsburgh Pirates":    5,    # PNC — CF faces N
+    "St. Louis Cardinals":   350,  # Busch — CF faces N
+    "Colorado Rockies":      355,  # Coors — CF faces N
+    "Los Angeles Dodgers":   315,  # Dodger — CF faces NW
+    "San Diego Padres":      340,  # Petco — CF faces NNW
+    "San Francisco Giants":  30,   # Oracle — CF faces NNE (bay wind from W = crosswind)
+    "Oakland Athletics":     350,  # Coliseum — CF faces N
+    "Athletics":             350,
+    "Texas Rangers":         0,    # Globe Life (indoor — irrelevant)
+    "Houston Astros":        0,    # Minute Maid (indoor)
+    "Tampa Bay Rays":        0,    # Tropicana (indoor)
+    "Toronto Blue Jays":     0,    # Rogers (indoor)
+    "Miami Marlins":         0,    # loanDepot (indoor)
+    "Arizona Diamondbacks":  0,    # Chase (indoor)
+}
+
+COMPASS_16 = {
+    "n": 0, "nne": 22, "ne": 45, "ene": 67, "e": 90, "ese": 112,
+    "se": 135, "sse": 157, "s": 180, "ssw": 202, "sw": 225, "wsw": 247,
+    "w": 270, "wnw": 292, "nw": 315, "nnw": 337,
+}
+
+def wind_to_model_dir(wind_dir_raw: Optional[str], home_team: str) -> str:
+    """
+    Convert wttr.in compass bearing (e.g. "NNE") to model-compatible
+    direction string ("out to cf", "in from cf", "cross", or "calm").
+    Uses park CF bearing to determine if wind is blowing out or in.
+    """
+    if not wind_dir_raw or wind_dir_raw in ("indoor", "calm", ""):
+        return wind_dir_raw or "calm"
+    raw = wind_dir_raw.lower().strip()
+    if raw not in COMPASS_16:
+        return "calm"  # unrecognized — treat as no effect
+    wind_bearing = COMPASS_16[raw]
+    cf_bearing = PARK_CF_BEARING.get(home_team, -1)
+    if cf_bearing < 0:
+        return "calm"  # unknown park orientation
+    # Angle between wind direction and CF direction
+    diff = abs(wind_bearing - cf_bearing) % 360
+    if diff > 180: diff = 360 - diff
+    if diff <= 45:   return "out to cf"    # wind blowing toward CF = out
+    if diff >= 135:  return "in from cf"   # wind blowing from CF = in
+    return "cross"                          # crosswind — minimal total effect
+
+
 def get_stadium(home_team: str) -> Dict:
     """Look up stadium info for a home team. Returns safe defaults if not found."""
     return MLB_STADIUMS.get(home_team, {
@@ -355,15 +423,66 @@ def fetch_weather(session, city: str, lat: Optional[float], lon: Optional[float]
 # ══════════════════════════════════════════════════════════════════════════════
 
 def mlb_pitcher_stats(session, pid: int, year: int) -> Dict:
-    data = safe_get(session, MLB_PERSON_STATS.format(pid=pid),
+    """
+    Fetch pitcher season stats + last-3-start recent form.
+    Returns era, k9, recent_era, home_era, away_era, throws (L/R).
+    recent_era: ERA over last 3 starts — stronger signal than season ERA
+                late in season after roster/mechanics changes.
+    home/away splits: some pitchers are dramatically better at home.
+    """
+    base = safe_get(session, MLB_PERSON_STATS.format(pid=pid),
                     params={"stats": "season", "group": "pitching", "season": year})
-    if not data: return {}
-    splits = ((data.get("stats") or [{}])[0]).get("splits", [])
-    if not splits: return {}
-    s = splits[0].get("stat", {})
-    ip = float(s.get("inningsPitched", 0) or 0)
-    so = int(s.get("strikeOuts", 0) or 0)
-    return {"era": to_float(s.get("era")), "k9": round(so / ip * 9, 2) if ip > 0 else None}
+    splits_data = safe_get(session, MLB_PERSON_STATS.format(pid=pid),
+                           params={"stats": "statSplits", "group": "pitching",
+                                   "season": year, "sitCodes": "h,a"})
+    log_data = safe_get(session, MLB_PERSON_STATS.format(pid=pid),
+                        params={"stats": "gameLog", "group": "pitching",
+                                "season": year, "limit": 3})
+    bio_data = safe_get(session, f"https://statsapi.mlb.com/api/v1/people/{pid}")
+
+    result: Dict[str, Any] = {}
+
+    # Season stats
+    if base:
+        splits = ((base.get("stats") or [{}])[0]).get("splits", [])
+        if splits:
+            s = splits[0].get("stat", {})
+            ip = float(s.get("inningsPitched", 0) or 0)
+            so = int(s.get("strikeOuts", 0) or 0)
+            result["era"] = to_float(s.get("era"))
+            result["k9"]  = round(so / ip * 9, 2) if ip > 0 else None
+
+    # Recent form: last 3 starts ER / IP
+    if log_data:
+        log_splits = ((log_data.get("stats") or [{}])[0]).get("splits", [])
+        total_er = 0.0; total_ip = 0.0
+        for entry in log_splits[:3]:
+            s = entry.get("stat", {})
+            ip = float(s.get("inningsPitched", 0) or 0)
+            er = float(s.get("earnedRuns", 0) or 0)
+            total_er += er; total_ip += ip
+        if total_ip > 0:
+            result["recent_era"] = round((total_er / total_ip) * 9, 2)
+        else:
+            result["recent_era"] = None
+
+    # Home/away splits
+    if splits_data:
+        for split in ((splits_data.get("stats") or [{}])[0]).get("splits", []):
+            loc = (split.get("split", {}).get("code") or "").lower()
+            s = split.get("stat", {})
+            ip = float(s.get("inningsPitched", 0) or 0)
+            if ip < 5: continue  # too few IP to be meaningful
+            era = to_float(s.get("era"))
+            if loc == "h": result["home_era"] = era
+            elif loc == "a": result["away_era"] = era
+
+    # Handedness
+    if bio_data:
+        people = bio_data.get("people", [{}])
+        result["throws"] = (people[0].get("pitchHand", {}).get("code") or "R") if people else "R"
+
+    return result
 
 def mlb_team_bull(session, tid: int, year: int) -> Dict:
     """
@@ -420,9 +539,45 @@ def get_xera(savant_idx: Dict, probable: Dict, full_name: str) -> Optional[float
         if last and last in k: return v
     return None
 
+
+# ── Line movement tracking ────────────────────────────────────────────────────
+# We cache today's posted lines so tomorrow we can compare opening vs closing.
+# This gives us a real steam signal when line moves >= 0.5 runs.
+
+def load_line_cache(target_date: date) -> Dict[str, float]:
+    """Load yesterday's posted lines from disk cache."""
+    cache_path = CACHE_DIR / f"lines_{target_date.strftime('%Y-%m-%d')}.json"
+    try:
+        if cache_path.exists():
+            return json.loads(cache_path.read_text())
+    except Exception:
+        pass
+    return {}
+
+def save_line_cache(target_date: date, lines: Dict[str, float]) -> None:
+    """Save today's posted lines for tomorrow's movement comparison."""
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = CACHE_DIR / f"lines_{target_date.strftime('%Y-%m-%d')}.json"
+    try:
+        cache_path.write_text(json.dumps(lines))
+    except Exception as e:
+        print(f"  [warn] Line cache save failed: {e}")
+
+def get_line_open(game_key: str, current_line: float,
+                  yesterday_lines: Dict[str, float]) -> Optional[float]:
+    """
+    Return opening line if we have yesterday's data, else None.
+    game_key format: "away@home"
+    """
+    return yesterday_lines.get(game_key)
+
+
 def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateResult:
     year = target_date.year
     warnings: List[str] = []
+    # Load yesterday's lines for movement tracking
+    yesterday_lines = load_line_cache(target_date - timedelta(days=1))
+    today_lines: Dict[str, float] = {}
     try:
         data = safe_get(session, MLB_SCHEDULE_URL, params={
             "sportId": 1, "date": target_date.strftime("%Y-%m-%d"),
@@ -459,6 +614,10 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
             home_st = sav_t.get(home_name.lower(), {})
             odds = match_odds(odds_games, home_name, away_name)
             line = odds.get("total") or 8.5
+            game_key = f"{away_name}@{home_name}"
+            line_open = get_line_open(game_key, line, yesterday_lines)
+            if line is not None:
+                today_lines[game_key] = line
 
             # ── Stadium: park factor, elevation, weather city ──────────────
             stadium    = get_stadium(home_name)
@@ -469,6 +628,8 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
             # ── Weather: real data or honest None (never fake calm) ────────
             wx = fetch_weather(session, stadium["city"], stadium["lat"],
                                stadium["lon"], is_indoor)
+            # Convert compass bearing to model-compatible direction string
+            wind_dir_model = wind_to_model_dir(wx.get("wind_dir"), home_name)
 
             # ── Bullpen: prefer recent ERA when available ──────────────────
             # bull_era_recent is None until we add a last-14-day data source.
@@ -500,9 +661,9 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
                 "park": stadium["park"],
                 "park_factor": park_factor,
                 "elevation": elevation,
-                "line": line, "line_open": line,
+                "line": line, "line_open": line_open,  # None until we have yesterday's cache
                 # Real weather — None when unavailable, 0/indoor for domes
-                "wind": wx["wind"], "wind_dir": wx["wind_dir"], "temp": wx["temp"],
+                "wind": wx["wind"], "wind_dir": wind_dir_model, "temp": wx["temp"],
                 "ml_home": odds.get("ml_home"), "ml_away": odds.get("ml_away"),
                 "rl_home": odds.get("rl_home"), "rl_away": odds.get("rl_away"),
                 # Side-specific over/under prices (Priority C)
@@ -512,6 +673,14 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
                 "no_market": not has_market,
                 "rest_home": 0, "rest_away": 0,
                 "form_home": 0.5, "form_away": 0.5, "rd_home": 0, "rd_away": 0,
+                # Recent form: use last-3-start ERA if available, else season
+                # This catches hot/cold streaks the season number misses
+                "home_pitcher_throws": home_s.get("throws", "R"),
+                "away_pitcher_throws": away_s.get("throws", "R"),
+                "home_era_recent": home_s.get("recent_era"),
+                "away_era_recent": away_s.get("recent_era"),
+                "home_era_home":   home_s.get("home_era"),   # home split ERA
+                "away_era_away":   away_s.get("away_era"),   # away split ERA
                 "note": (
                     f"Auto-fetched {target_date}. xERA from Savant. Odds from The Odds API."
                     + (f" Park: {stadium['park']} (PF {park_factor}, elev {elevation}ft)." if park_factor != 100 or elevation > 0 else "")
@@ -525,6 +694,8 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
         except Exception as e:
             warnings.append(f"Game build error: {e}")
 
+    # Save today's lines for tomorrow's line movement comparison
+    save_line_cache(target_date, today_lines)
     return SportSlateResult("mlb", games, "ok", warnings)
 
 def inject_mlb(html: str, result: SportSlateResult, d: date) -> str:
