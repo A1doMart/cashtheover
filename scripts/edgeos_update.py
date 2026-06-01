@@ -544,6 +544,90 @@ def get_xera(savant_idx: Dict, probable: Dict, full_name: str) -> Optional[float
 # We cache today's posted lines so tomorrow we can compare opening vs closing.
 # This gives us a real steam signal when line moves >= 0.5 runs.
 
+
+UMP_RUN_FACTOR: Dict[str, float] = {
+    # Hitter-friendly (over) umpires — run factor > 1.0
+    "CB Bucknor":       1.09,
+    "Kerwin Danley":    1.08,
+    "Alfonso Marquez":  1.07,
+    "Angel Hernandez":  1.06,
+    "Laz Diaz":         1.06,
+    "Jerry Meals":      1.05,
+    "Marvin Hudson":    1.05,
+    "Sam Holbrook":     1.05,
+    "Mark Carlson":     1.04,
+    "Dan Iassogna":     1.04,
+    "Tom Hallion":      1.04,
+    "Vic Carapazza":    1.04,
+    "Stu Scheurwater":  1.03,
+    "Hunter Wendelstedt": 1.03,
+    "Paul Nauert":      1.03,
+    "Joe West":         1.03,
+    "Ted Barrett":      1.02,
+    "Bill Welke":       1.02,
+    "Quinn Wolcott":    1.02,
+    "Cory Blaser":      1.02,
+    "Shane Livensparger": 1.02,
+    "Chris Conroy":     1.02,
+    # Near neutral
+    "Joe Tarnowski":    1.01,
+    "Ryan Blakney":     1.01,
+    "Alex MacKay":      1.01,
+    "Jeremie Rehak":    1.00,
+    "Chad Fairchild":   1.00,
+    "Brian Knight":     1.00,
+    "Nate Tomlinson":   1.00,
+    "Dan Bellino":      1.00,
+    "Scott Barry":      1.00,
+    "Junior Valentine": 1.00,
+    "James Hoye":       1.00,
+    "Chris Guccione":   1.00,
+    "Edwin Moscoso":    1.00,
+    "Ryan Wills":       1.00,
+    # Pitcher-friendly (under) umpires — run factor < 1.0
+    "Doug Eddings":     0.99,
+    "Lance Barksdale":  0.99,
+    "Will Little":      0.98,
+    "Ryan Additon":     0.98,
+    "Tripp Gibson":     0.97,
+    "Jim Wolf":         0.97,
+    "John Tumpane":     0.97,
+    "Tom Woodring":     0.97,
+    "Ben May":          0.97,
+    "Mark Wegner":      0.96,
+    "Alan Porter":      0.96,
+    "Adam Hamari":      0.96,
+    "Mike Estabrook":   0.96,
+    "Carlos Torres":    0.95,
+    "Bruce Dreckman":   0.95,
+    "Nic Lentz":        0.95,
+    "Brennan Miller":   0.95,
+    "Nick Mahrley":     0.95,
+    "Roberto Ortiz":    0.94,
+    "Phil Cuzzi":       0.94,
+}
+
+
+def get_ump_factor(ump_name: Optional[str]) -> float:
+    """
+    Return run environment factor for a home plate umpire.
+    1.0 = neutral (fallback when umpire not in table or name unknown).
+    Factor is applied as a multiplier to projected total runs.
+    A factor of 1.06 means the umpire historically produces 6% more runs
+    than average — shift projected total up by that amount.
+    """
+    if not ump_name:
+        return 1.0
+    # Try exact match first, then partial last name match
+    if ump_name in UMP_RUN_FACTOR:
+        return UMP_RUN_FACTOR[ump_name]
+    last = ump_name.split()[-1] if ump_name else ""
+    for k, v in UMP_RUN_FACTOR.items():
+        if last and k.split()[-1].lower() == last.lower():
+            return v
+    return 1.0  # unknown umpire — treat as neutral
+
+
 def load_line_cache(target_date: date) -> Dict[str, float]:
     """Load yesterday's posted lines from disk cache."""
     cache_path = CACHE_DIR / f"lines_{target_date.strftime('%Y-%m-%d')}.json"
@@ -581,7 +665,7 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
     try:
         data = safe_get(session, MLB_SCHEDULE_URL, params={
             "sportId": 1, "date": target_date.strftime("%Y-%m-%d"),
-            "hydrate": "probablePitcher,team"
+            "hydrate": "probablePitcher,team,officials"
         })
         schedule = ((data.get("dates") or [{}])[0]).get("games", []) if data else []
     except Exception as e:
@@ -593,6 +677,18 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
     sav_p = savant_pitcher_index(session, year)
     sav_t = savant_team_index(session, year)
     games = []
+
+    # Pre-build umpire map: gamePk -> HP umpire name
+    ump_map: Dict[int, str] = {}
+    for game in schedule:
+        gp = game.get("gamePk")
+        officials = game.get("officials") or []
+        for off in officials:
+            if (off.get("officialType") or "").lower() == "home plate":
+                name = (off.get("official") or {}).get("fullName") or ""
+                if gp and name:
+                    ump_map[gp] = name
+                break
 
     for game in schedule:
         try:
@@ -615,6 +711,12 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
             odds = match_odds(odds_games, home_name, away_name)
             line = odds.get("total") or 8.5
             game_key = f"{away_name}@{home_name}"
+            # Umpire
+            gp = game.get("gamePk")
+            ump_name = ump_map.get(gp) if gp else None
+            ump_factor = get_ump_factor(ump_name)
+            if ump_name:
+                print(f"    [Ump] {ump_name} (factor {ump_factor:.2f})")
             line_open = get_line_open(game_key, line, yesterday_lines)
             if line is not None:
                 today_lines[game_key] = line
@@ -671,6 +773,9 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
                 "total_under_odds": odds.get("total_under_odds"),
                 # no_market flag: JS model forces NO BET when True
                 "no_market": not has_market,
+                # Umpire run environment
+                "umpire": ump_name,
+                "ump_factor": ump_factor,
                 "rest_home": 0, "rest_away": 0,
                 "form_home": 0.5, "form_away": 0.5, "rd_home": 0, "rd_away": 0,
                 # Recent form: use last-3-start ERA if available, else season
@@ -686,6 +791,7 @@ def build_mlb(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
                     + (f" Park: {stadium['park']} (PF {park_factor}, elev {elevation}ft)." if park_factor != 100 or elevation > 0 else "")
                     + (f" Weather: {wx['wind']}mph {wx['wind_dir']}, {wx['temp']}F." if wx["wind"] is not None and not is_indoor else "")
                     + (" INDOOR PARK — weather irrelevant." if is_indoor else "")
+                    + (f" HP Ump: {ump_name} (factor {ump_factor:.2f})." if ump_name else "")
                     + (" NO MARKET — model will force NO BET on totals." if not has_market else "")
                 ),
             }
