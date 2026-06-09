@@ -628,6 +628,107 @@ def get_ump_factor(ump_name: Optional[str]) -> float:
     return 1.0  # unknown umpire — treat as neutral
 
 
+
+def fetch_scores_for_date(session, date_str: str) -> Dict[str, Dict]:
+    """Fetch final MLB scores for a specific date."""
+    data = safe_get(session, MLB_SCHEDULE_URL, params={
+        "sportId": 1, "date": date_str, "hydrate": "linescore,team"
+    })
+    if not data: return {}
+    games = ((data.get("dates") or [{}])[0]).get("games", [])
+    scores = {}
+    for g in games:
+        if g.get("status", {}).get("abstractGameState") != "Final": continue
+        home = g.get("teams", {}).get("home", {})
+        away = g.get("teams", {}).get("away", {})
+        hn = home.get("team", {}).get("name", "")
+        an = away.get("team", {}).get("name", "")
+        hs = home.get("score")
+        aws = away.get("score")
+        if hs is not None and aws is not None:
+            scores[an + "@" + hn] = {
+                "home": hn, "away": an,
+                "home_score": hs, "away_score": aws,
+                "total": hs + aws, "date": date_str
+            }
+    return scores
+
+
+def backfill_grade_script(all_scores_by_date: Dict[str, Dict]) -> str:
+    """
+    Build a JS script that grades ALL ungraded picks going back 30 days.
+    Runs once on page load — picks already graded are skipped.
+    """
+    lines = [
+        "<script>",
+        "(function(){",
+        f"  var scoresByDate={json.dumps(all_scores_by_date)};",
+        "  function gradeKey(key,type){",
+        "    try{",
+        "      var rows=JSON.parse(localStorage.getItem(key)||'[]');",
+        "      var changed=false;",
+        "      rows.forEach(function(r){",
+        "        if(r.result)return;",
+        "        var dateScores=scoresByDate[r.date];",
+        "        if(!dateScores)return;",
+        "        var sc=dateScores[r.away+'@'+r.home]||dateScores[(r.away_team||r.away)+'@'+(r.home_team||r.home)];",
+        "        if(!sc)return;",
+        "        if(type==='totals'){",
+        "          var pick=(r.pick||'').toUpperCase();",
+        "          var line=parseFloat(r.line||0);",
+        "          var total=sc.total;",
+        "          if(total===line)r.result='PUSH';",
+        "          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';",
+        "          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';",
+        "          r.actual=total;",
+        "        }else if(type==='ml'){",
+        "          var side=(r.pick_side||'').toUpperCase();",
+        "          var hs=sc.home_score,as=sc.away_score;",
+        "          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';",
+        "          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';",
+        "        }else if(type==='rl'){",
+        "          var mg=sc.home_score-sc.away_score;",
+        "          var pk=(r.pick||'');",
+        "          if(pk.indexOf('+1.5')>=0)r.result=Math.abs(mg)<=1?'COVER':'MISS';",
+        "          else if(pk.indexOf('-1.5')>=0)r.result=mg>=2?'COVER':'MISS';",
+        "          else{var sd=(r.pick_side||'').toUpperCase();r.result=sd==='HOME'?(mg>=2?'COVER':'MISS'):(mg<=-2?'COVER':'MISS');}",
+        "        }",
+        "        if(r.result)changed=true;",
+        "      });",
+        "      if(changed)localStorage.setItem(key,JSON.stringify(rows));",
+        "    }catch(e){}",
+        "  }",
+        "  gradeKey('edgeos-v10-today','totals');",
+        "  gradeKey('edgeos-ml-v1-backtest','ml');",
+        "  gradeKey('edgeos-rl-v1-backtest','rl');",
+        "})();",
+        "</script>",
+    ]
+    return "\n".join(lines)
+
+
+def run_backfill(session, html: str, target_date: date, days_back: int = 30) -> str:
+    """
+    Fetch scores for last N days and inject a one-time backfill grading script.
+    This grades any ungraded picks going back up to days_back days.
+    """
+    print(f"\nRunning backfill grader (last {days_back} days)...")
+    all_scores: Dict[str, Dict] = {}
+    for i in range(1, days_back + 1):
+        d = target_date - timedelta(days=i)
+        date_str = d.strftime("%Y-%m-%d")
+        day_scores = fetch_scores_for_date(session, date_str)
+        if day_scores:
+            all_scores[date_str] = day_scores
+            print(f"  {date_str}: {len(day_scores)} games")
+    print(f"  Total: {sum(len(v) for v in all_scores.values())} scores across {len(all_scores)} days")
+    if all_scores and "</body>" in html:
+        script = backfill_grade_script(all_scores)
+        html = html.replace("</body>", script + "\n</body>", 1)
+        print("  Backfill grading script injected")
+    return html
+
+
 def load_line_cache(target_date: date) -> Dict[str, float]:
     """Load yesterday's posted lines from disk cache."""
     cache_path = CACHE_DIR / f"lines_{target_date.strftime('%Y-%m-%d')}.json"
