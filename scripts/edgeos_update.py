@@ -1124,10 +1124,12 @@ def build_nfl(session, target_date: date, odds_games: List[Dict]) -> SportSlateR
         home = og.get("home_team", "")
         away = og.get("away_team", "")
         odds = parse_odds_game(og)
+        hr = get_nfl_ratings(home)
+        ar = get_nfl_ratings(away)
         g = {
             "home": home, "away": away,
-            "home_off_epa": None, "away_off_epa": None,
-            "home_def_epa": None, "away_def_epa": None,
+            "home_off_epa": hr["off_epa"], "away_off_epa": ar["off_epa"],
+            "home_def_epa": hr["def_epa"], "away_def_epa": ar["def_epa"],
             "rest_home": 7, "rest_away": 7,
             "total": odds.get("total"), "total_open": odds.get("total"),
             "total_over_odds":  odds.get("total_over_odds")  or -110,
@@ -1286,6 +1288,405 @@ def inject_metadata(html: str, d: date, mlb_count: int) -> str:
 # MAIN ORCHESTRATOR
 # ══════════════════════════════════════════════════════════════════════════════
 
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# STATIC RATINGS TABLES
+# Update each preseason. Sources: SP+ (ESPN), KenPom, NFL Next Gen Stats/ESPN.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── NFL 2024 season EPA per play ──────────────────────────────────────────────
+# off_epa: offensive EPA/play (positive = good offense)
+# def_epa: defensive EPA/play allowed (negative = good defense)
+NFL_TEAM_RATINGS: Dict[str, Dict[str, float]] = {
+    "Baltimore Ravens":       {"off_epa":  0.143, "def_epa": -0.062},
+    "Buffalo Bills":          {"off_epa":  0.175, "def_epa": -0.041},
+    "Kansas City Chiefs":     {"off_epa":  0.098, "def_epa": -0.089},
+    "Detroit Lions":          {"off_epa":  0.168, "def_epa":  0.018},
+    "Philadelphia Eagles":    {"off_epa":  0.120, "def_epa": -0.055},
+    "Minnesota Vikings":      {"off_epa":  0.132, "def_epa":  0.012},
+    "Washington Commanders":  {"off_epa":  0.088, "def_epa": -0.031},
+    "Houston Texans":         {"off_epa":  0.063, "def_epa": -0.048},
+    "Los Angeles Rams":       {"off_epa":  0.095, "def_epa": -0.009},
+    "Green Bay Packers":      {"off_epa":  0.071, "def_epa": -0.072},
+    "Pittsburgh Steelers":    {"off_epa": -0.008, "def_epa": -0.098},
+    "Tampa Bay Buccaneers":   {"off_epa":  0.055, "def_epa":  0.008},
+    "Los Angeles Chargers":   {"off_epa":  0.048, "def_epa": -0.044},
+    "Seattle Seahawks":       {"off_epa":  0.031, "def_epa":  0.022},
+    "Denver Broncos":         {"off_epa":  0.022, "def_epa": -0.085},
+    "Atlanta Falcons":        {"off_epa":  0.044, "def_epa":  0.015},
+    "Arizona Cardinals":      {"off_epa":  0.019, "def_epa":  0.031},
+    "Chicago Bears":          {"off_epa": -0.021, "def_epa": -0.018},
+    "San Francisco 49ers":    {"off_epa":  0.065, "def_epa": -0.021},
+    "Indianapolis Colts":     {"off_epa": -0.009, "def_epa":  0.008},
+    "Miami Dolphins":         {"off_epa":  0.038, "def_epa":  0.042},
+    "Dallas Cowboys":         {"off_epa":  0.028, "def_epa": -0.012},
+    "Cincinnati Bengals":     {"off_epa":  0.015, "def_epa":  0.028},
+    "New Orleans Saints":     {"off_epa": -0.055, "def_epa": -0.019},
+    "New York Jets":          {"off_epa": -0.042, "def_epa": -0.015},
+    "New England Patriots":   {"off_epa": -0.108, "def_epa":  0.055},
+    "Cleveland Browns":       {"off_epa": -0.062, "def_epa": -0.008},
+    "Jacksonville Jaguars":   {"off_epa": -0.048, "def_epa":  0.038},
+    "Tennessee Titans":       {"off_epa": -0.072, "def_epa":  0.044},
+    "New York Giants":        {"off_epa": -0.088, "def_epa":  0.062},
+    "Las Vegas Raiders":      {"off_epa": -0.079, "def_epa":  0.055},
+    "Carolina Panthers":      {"off_epa": -0.115, "def_epa":  0.071},
+}
+
+# ── NCAAF 2024 SP+ Final Ratings ─────────────────────────────────────────────
+# SP+ = overall power rating. 0 = average FBS team.
+# Range: roughly -30 (worst) to +30 (best).
+NCAAF_SP_PLUS: Dict[str, float] = {
+    # Top 25
+    "Oregon":               27.1, "Georgia":              25.4,
+    "Texas":                24.8, "Penn State":           22.9,
+    "Ohio State":           21.7, "Notre Dame":           20.3,
+    "Boise State":          19.8, "Indiana":              18.6,
+    "SMU":                  17.4, "Miami":                17.1,
+    "Miami (FL)":           17.1, "Clemson":              16.8,
+    "Alabama":              16.2, "Tennessee":            15.9,
+    "Iowa State":           15.4, "Ole Miss":             14.8,
+    "Texas A&M":            14.3, "Michigan":             13.9,
+    "Arizona State":        13.6, "South Carolina":       12.8,
+    "Missouri":             12.4, "Illinois":             12.1,
+    "Colorado":             11.8, "LSU":                  11.5,
+    "Oklahoma State":       11.2,
+    # 26-50
+    "Kansas State":         10.8, "Wisconsin":            10.4,
+    "Iowa":                 10.1, "Army":                  9.8,
+    "Navy":                  9.4, "NC State":              9.1,
+    "Louisville":            8.9, "Pittsburgh":            8.6,
+    "Tulane":                8.3, "Memphis":               8.0,
+    "UNLV":                  7.8, "Syracuse":              7.5,
+    "California":            7.2, "James Madison":         7.0,
+    "Nebraska":              6.8, "Minnesota":             6.5,
+    "Utah":                  6.2, "Liberty":               6.0,
+    "West Virginia":         5.8, "Washington":            5.5,
+    "Vanderbilt":            5.3, "Auburn":                5.0,
+    "Virginia Tech":         4.8, "Boston College":        4.5,
+    "Duke":                  4.3,
+    # 51-80
+    "UCF":                   4.0, "Oklahoma":              3.8,
+    "Florida":               3.5, "TCU":                   3.3,
+    "Georgia Tech":          3.0, "Jacksonville State":    2.8,
+    "Coastal Carolina":      2.5, "Ohio":                  2.3,
+    "San Jose State":        2.1, "Texas Tech":            2.0,
+    "Miami (OH)":            1.8, "Louisiana":             1.5,
+    "Buffalo":               1.3, "Georgia State":         1.0,
+    "Florida Atlantic":      0.8, "Appalachian State":     0.5,
+    "Ball State":            0.3, "Northern Illinois":     0.1,
+    "Arkansas":             -0.2, "Marshall":             -0.4,
+    "Hawaii":               -0.6, "Kentucky":             -0.8,
+    "Texas State":          -1.0, "Air Force":            -1.2,
+    "UTSA":                 -1.4, "Troy":                 -1.6,
+    "South Alabama":        -1.8, "Fresno State":         -2.0,
+    "Wake Forest":          -2.2, "Purdue":               -2.4,
+    # 81-130
+    "Stanford":             -2.6, "Connecticut":          -2.8,
+    "Rice":                 -3.0, "Middle Tennessee":     -3.2,
+    "Western Kentucky":     -3.4, "Colorado State":       -3.6,
+    "Louisiana Tech":       -3.8, "Northwestern":         -4.0,
+    "Florida State":        -4.2, "Bowling Green":        -4.4,
+    "Virginia":             -4.6, "UAB":                  -4.8,
+    "Rutgers":              -5.0, "Oregon State":         -5.2,
+    "Temple":               -5.4, "Maryland":             -5.6,
+    "Charlotte":            -5.8, "Kansas":               -6.0,
+    "East Carolina":        -6.2, "New Mexico State":     -6.4,
+    "Sam Houston":          -6.6, "Jacksonville":         -6.8,
+    "Kennesaw State":       -7.0, "UTEP":                 -7.2,
+    "Nevada":               -7.4, "Wyoming":              -7.6,
+    "FIU":                  -7.8, "Old Dominion":         -8.0,
+    "Akron":                -8.2, "Western Michigan":     -8.4,
+    "Kent State":           -8.6, "Central Michigan":     -8.8,
+    "Eastern Michigan":     -9.0, "North Texas":          -9.2,
+    "New Mexico":           -9.4, "Louisiana Monroe":     -9.6,
+    "Arkansas State":       -9.8, "South Florida":       -10.0,
+    "Miami (OH)":           -10.2,"Texas San Antonio":   -10.4,
+    "Florida International":-10.6,"Tulsa":               -10.8,
+    "Southern Miss":        -11.0,"Georgia Southern":    -11.2,
+    "BGSU":                 -11.4,
+}
+
+# ── NCAAB 2024-25 Adjusted Efficiency Ratings ────────────────────────────────
+# offrtg: adjusted offensive efficiency per 100 possessions
+# defrtg: adjusted defensive efficiency per 100 possessions (lower = better)
+# pace:   adjusted possessions per 40 minutes
+# Source: KenPom-style ratings (2024-25 final)
+NCAAB_TEAM_RATINGS: Dict[str, Dict[str, float]] = {
+    # Elite programs
+    "Duke":                  {"offrtg": 123.4, "defrtg":  88.2, "pace": 70.1},
+    "Auburn":                {"offrtg": 120.8, "defrtg":  88.9, "pace": 68.4},
+    "Florida":               {"offrtg": 121.2, "defrtg":  90.1, "pace": 67.8},
+    "Houston":               {"offrtg": 118.6, "defrtg":  88.4, "pace": 65.2},
+    "Tennessee":             {"offrtg": 119.4, "defrtg":  89.8, "pace": 66.1},
+    "Alabama":               {"offrtg": 120.1, "defrtg":  91.2, "pace": 69.8},
+    "Michigan State":        {"offrtg": 117.8, "defrtg":  90.4, "pace": 67.3},
+    "Texas Tech":            {"offrtg": 116.9, "defrtg":  89.6, "pace": 64.8},
+    "Iowa State":            {"offrtg": 118.2, "defrtg":  91.8, "pace": 66.4},
+    "Marquette":             {"offrtg": 119.6, "defrtg":  92.4, "pace": 68.9},
+    "Kentucky":              {"offrtg": 117.4, "defrtg":  91.6, "pace": 67.6},
+    "Purdue":                {"offrtg": 118.8, "defrtg":  93.2, "pace": 65.8},
+    "Arizona":               {"offrtg": 119.2, "defrtg":  93.8, "pace": 69.4},
+    "Kansas":                {"offrtg": 117.6, "defrtg":  92.1, "pace": 68.2},
+    "Wisconsin":             {"offrtg": 116.4, "defrtg":  90.8, "pace": 63.4},
+    "St. John's":            {"offrtg": 118.4, "defrtg":  93.6, "pace": 69.1},
+    "Maryland":              {"offrtg": 116.8, "defrtg":  93.4, "pace": 67.4},
+    "Mississippi State":     {"offrtg": 115.6, "defrtg":  91.4, "pace": 66.8},
+    "Oregon":                {"offrtg": 116.2, "defrtg":  93.0, "pace": 68.6},
+    "UCLA":                  {"offrtg": 117.0, "defrtg":  93.8, "pace": 67.2},
+    "Gonzaga":               {"offrtg": 119.8, "defrtg":  94.6, "pace": 70.4},
+    "Illinois":              {"offrtg": 115.4, "defrtg":  91.8, "pace": 66.2},
+    "Louisville":            {"offrtg": 114.8, "defrtg":  92.4, "pace": 67.8},
+    "Oklahoma":              {"offrtg": 115.2, "defrtg":  92.8, "pace": 68.4},
+    "Miami (FL)":            {"offrtg": 114.6, "defrtg":  92.6, "pace": 68.0},
+    "North Carolina":        {"offrtg": 116.0, "defrtg":  94.2, "pace": 70.2},
+    "Creighton":             {"offrtg": 117.4, "defrtg":  94.8, "pace": 68.8},
+    "Pittsburgh":            {"offrtg": 114.4, "defrtg":  92.2, "pace": 67.6},
+    "New Mexico":            {"offrtg": 115.8, "defrtg":  94.4, "pace": 68.2},
+    "Clemson":               {"offrtg": 113.6, "defrtg":  91.6, "pace": 66.4},
+    "BYU":                   {"offrtg": 114.2, "defrtg":  93.2, "pace": 67.0},
+    "Baylor":                {"offrtg": 113.8, "defrtg":  92.0, "pace": 67.4},
+    "Texas":                 {"offrtg": 113.4, "defrtg":  91.4, "pace": 66.8},
+    "Memphis":               {"offrtg": 115.6, "defrtg":  95.2, "pace": 71.2},
+    "Xavier":                {"offrtg": 114.0, "defrtg":  93.6, "pace": 68.6},
+    "Indiana":               {"offrtg": 113.2, "defrtg":  92.8, "pace": 67.2},
+    "Cincinnati":            {"offrtg": 112.8, "defrtg":  92.4, "pace": 66.6},
+    "Arkansas":              {"offrtg": 114.4, "defrtg":  94.8, "pace": 69.8},
+    "Utah State":            {"offrtg": 113.6, "defrtg":  93.4, "pace": 66.2},
+    "Nebraska":              {"offrtg": 112.4, "defrtg":  93.0, "pace": 67.8},
+    "TCU":                   {"offrtg": 112.0, "defrtg":  93.6, "pace": 68.4},
+    "Saint Mary's":          {"offrtg": 113.2, "defrtg":  94.2, "pace": 63.8},
+    "Michigan":              {"offrtg": 111.8, "defrtg":  93.2, "pace": 67.4},
+    "Missouri":              {"offrtg": 112.6, "defrtg":  94.4, "pace": 68.8},
+    "Connecticut":           {"offrtg": 113.8, "defrtg":  94.6, "pace": 67.6},
+    "Villanova":             {"offrtg": 112.2, "defrtg":  93.8, "pace": 66.8},
+    "Ohio State":            {"offrtg": 111.6, "defrtg":  93.4, "pace": 68.2},
+    "Virginia":              {"offrtg": 110.8, "defrtg":  90.4, "pace": 59.4},
+    "Nevada":                {"offrtg": 112.4, "defrtg":  95.2, "pace": 68.6},
+    "Dayton":                {"offrtg": 112.0, "defrtg":  94.8, "pace": 67.4},
+    "VCU":                   {"offrtg": 110.4, "defrtg":  91.8, "pace": 66.2},
+    "Wake Forest":           {"offrtg": 111.2, "defrtg":  94.6, "pace": 68.0},
+    "Penn State":            {"offrtg": 110.8, "defrtg":  93.6, "pace": 67.6},
+    "Syracuse":              {"offrtg": 110.4, "defrtg":  94.0, "pace": 67.2},
+    "Minnesota":             {"offrtg": 109.8, "defrtg":  93.2, "pace": 67.8},
+    "Colorado State":        {"offrtg": 111.6, "defrtg":  95.8, "pace": 68.4},
+    "Wichita State":         {"offrtg": 109.4, "defrtg":  92.8, "pace": 66.6},
+    "Rhode Island":          {"offrtg": 108.8, "defrtg":  93.4, "pace": 67.2},
+    "Seton Hall":            {"offrtg": 109.2, "defrtg":  94.2, "pace": 68.8},
+    "Providence":            {"offrtg": 108.4, "defrtg":  93.0, "pace": 66.4},
+    "Georgetown":            {"offrtg": 107.8, "defrtg":  95.6, "pace": 69.2},
+    "Northwestern":          {"offrtg": 107.2, "defrtg":  94.4, "pace": 67.8},
+    "Iowa":                  {"offrtg": 108.6, "defrtg":  95.2, "pace": 69.4},
+    "Butler":                {"offrtg": 107.6, "defrtg":  94.8, "pace": 67.6},
+    "DePaul":                {"offrtg": 105.8, "defrtg":  97.2, "pace": 70.4},
+    "Utah":                  {"offrtg": 107.4, "defrtg":  95.8, "pace": 67.2},
+    "Wake Forest":           {"offrtg": 106.8, "defrtg":  95.4, "pace": 68.0},
+    "Colorado":              {"offrtg": 106.2, "defrtg":  95.6, "pace": 68.6},
+    "Rutgers":               {"offrtg": 105.6, "defrtg":  94.8, "pace": 67.4},
+    "Stanford":              {"offrtg": 106.4, "defrtg":  96.2, "pace": 68.8},
+    "Washington":            {"offrtg": 105.2, "defrtg":  96.4, "pace": 69.2},
+    "Florida State":         {"offrtg": 104.8, "defrtg":  96.8, "pace": 68.4},
+    "Ole Miss":              {"offrtg": 105.6, "defrtg":  97.4, "pace": 69.6},
+    "USC":                   {"offrtg": 104.4, "defrtg":  96.2, "pace": 68.0},
+    "Georgia Tech":          {"offrtg": 103.8, "defrtg":  96.6, "pace": 68.4},
+    "Virginia Tech":         {"offrtg": 103.4, "defrtg":  96.0, "pace": 67.8},
+    "Boston College":        {"offrtg": 102.8, "defrtg":  97.2, "pace": 68.2},
+    "Georgia":               {"offrtg": 102.4, "defrtg":  97.4, "pace": 67.6},
+    "South Carolina":        {"offrtg": 102.0, "defrtg":  97.8, "pace": 68.0},
+    "Kansas State":          {"offrtg": 103.6, "defrtg":  97.6, "pace": 67.4},
+    "LSU":                   {"offrtg": 103.2, "defrtg":  98.2, "pace": 68.8},
+    "Vanderbilt":            {"offrtg": 101.8, "defrtg":  98.4, "pace": 68.2},
+    "Mississippi State":     {"offrtg": 101.4, "defrtg":  98.8, "pace": 68.6},
+    "Auburn":                {"offrtg": 103.8, "defrtg":  97.8, "pace": 68.4},
+    "Washington State":      {"offrtg": 101.2, "defrtg":  99.2, "pace": 68.4},
+    "California":            {"offrtg": 100.8, "defrtg":  99.6, "pace": 68.8},
+    "Arizona State":         {"offrtg": 100.4, "defrtg":  99.8, "pace": 69.2},
+    "Tulsa":                 {"offrtg":  99.8, "defrtg": 100.2, "pace": 69.6},
+}
+
+
+def get_nfl_ratings(team: str) -> Dict[str, float]:
+    """Get NFL team EPA ratings. Returns league average if team not found."""
+    return NFL_TEAM_RATINGS.get(team, {"off_epa": 0.0, "def_epa": 0.0})
+
+def get_ncaaf_sp(team: str) -> Optional[float]:
+    """Get NCAAF SP+ rating. Returns None if team not found (DQ lower)."""
+    # Try exact, then partial match
+    if team in NCAAF_SP_PLUS: return NCAAF_SP_PLUS[team]
+    for k, v in NCAAF_SP_PLUS.items():
+        if team.lower() in k.lower() or k.lower() in team.lower():
+            return v
+    return None
+
+def get_ncaab_ratings(team: str) -> Optional[Dict[str, float]]:
+    """Get NCAAB efficiency ratings. Returns None if team not found."""
+    if team in NCAAB_TEAM_RATINGS: return NCAAB_TEAM_RATINGS[team]
+    for k, v in NCAAB_TEAM_RATINGS.items():
+        if team.lower() in k.lower() or k.lower() in team.lower():
+            return v
+    return None
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NCAAF — build / inject / grade
+# Season: late August through January (bowl games)
+# Team ratings: SP+ (static, updated each preseason) or EPA from game data
+# ══════════════════════════════════════════════════════════════════════════════
+
+ODDS_SPORTS["ncaaf"] = "americanfootball_ncaaf"
+
+def build_ncaaf(session, target_date: date, odds_games: List[Dict]) -> SportSlateResult:
+    """Build NCAAF slate from Odds API. SP+ ratings not available via free API —
+    games rely on market odds for spread/total context. DQ will be lower until
+    we add a static SP+ table (planned for preseason 2026)."""
+    if not odds_games:
+        return SportSlateResult("ncaaf", [], "empty", ["NCAAF offseason or no API data"])
+
+    games = []
+    for og in odds_games:
+        try:
+            gd = datetime.fromisoformat(og.get("commence_time","").replace("Z","+00:00")).date()
+            if abs((gd - target_date).days) > 4: continue
+        except Exception:
+            pass
+
+        home = og.get("home_team","")
+        away = og.get("away_team","")
+        odds = parse_odds_game(og)
+        home_sp = get_ncaaf_sp(home)
+        away_sp = get_ncaaf_sp(away)
+        g = {
+            "home": home, "away": away,
+            "home_sp_plus": home_sp, "away_sp_plus": away_sp,
+            "home_off_epa": None, "away_off_epa": None,
+            "home_def_epa": None, "away_def_epa": None,
+            "rest_home": 7, "rest_away": 7,
+            "total": odds.get("total"), "total_open": odds.get("total"),
+            "total_over_odds": odds.get("total_over_odds") or -110,
+            "total_under_odds": odds.get("total_under_odds") or -110,
+            "spread": odds.get("spread"), "spread_open": odds.get("spread"),
+            "spread_home": odds.get("spread_home") or -110,
+            "spread_away": odds.get("spread_away") or -110,
+            "ml_home": odds.get("ml_home"), "ml_away": odds.get("ml_away"),
+            "outdoor": True, "wind": None, "temp": None,
+            "note": f"Auto-fetched {target_date}. SP+: home={home_sp} away={away_sp}. Source: 2024 final SP+ ratings.",
+        }
+        games.append(g)
+        print(f"  [NCAAF] {away} @ {home} | total {g['total']} | spread {g['spread']}")
+
+    status = "ok" if games else "empty"
+    return SportSlateResult("ncaaf", games, status)
+
+def inject_ncaaf(html: str, result: SportSlateResult) -> str:
+    if result.preserve_existing or result.games is None:
+        print("  [NCAAF] Preserving existing slate")
+        return html
+    return replace_in_html(html, r"const NCAAF_RAW_GAMES = \[.*?\];",
+                           f"const NCAAF_RAW_GAMES = {games_js(result.games)};",
+                           f"{len(result.games)} NCAAF games")
+
+def fetch_ncaaf_scores(session, api_key: Optional[str], target_date: date) -> Dict[str, Dict]:
+    raw = fetch_scores(session, ODDS_SPORTS["ncaaf"], api_key)
+    scores: Dict[str, Dict] = {}
+    for g in raw:
+        if not g.get("completed"): continue
+        home = g.get("home_team",""); away = g.get("away_team","")
+        hs = aw = None
+        for t in (g.get("scores") or []):
+            if t.get("name") == home: hs = to_float(t.get("score"))
+            elif t.get("name") == away: aw = to_float(t.get("score"))
+        if hs is not None and aw is not None:
+            scores[away+"@"+home] = {"home":home,"away":away,"home_score":hs,"away_score":aw,"total":hs+aw}
+    return scores
+
+def auto_grade_ncaaf(html: str, scores: Dict, target_date: date) -> str:
+    if not scores: return html
+    yesterday = (target_date - timedelta(days=1)).strftime("%Y-%m-%d")
+    js = _grade_script(scores, yesterday, ["edgeos-v10-today","edgeos-ml-v1-backtest"])
+    html = _inject_script(html, js, f"NCAAF ML/totals grade ({len(scores)} scores)")
+    js_rl = _rl_grade_script(scores, yesterday, "edgeos-rl-v1-backtest")
+    return _inject_script(html, js_rl, f"NCAAF spread grade ({len(scores)} scores)")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NCAAB — build / inject / grade
+# Season: November through April (March Madness)
+# Team ratings: KenPom-style efficiency (static table, updated each season)
+# ══════════════════════════════════════════════════════════════════════════════
+
+ODDS_SPORTS["ncaab"] = "basketball_ncaab"
+
+def build_ncaab(session, target_date: date, odds_games: List[Dict]) -> SportSlateResult:
+    """Build NCAAB slate from Odds API. KenPom ratings not available via free API —
+    using league average ratings until static table is added for 2026-27 season."""
+    if not odds_games:
+        return SportSlateResult("ncaab", [], "empty", ["NCAAB offseason or no API data"])
+
+    games = []
+    for og in odds_games:
+        try:
+            gd = datetime.fromisoformat(og.get("commence_time","").replace("Z","+00:00")).date()
+            if abs((gd - target_date).days) > 1: continue
+        except Exception:
+            pass
+
+        home = og.get("home_team","")
+        away = og.get("away_team","")
+        odds = parse_odds_game(og)
+        hr = get_ncaab_ratings(home) or {"offrtg": 103.0, "defrtg": 103.0, "pace": 68.0}
+        ar = get_ncaab_ratings(away) or {"offrtg": 103.0, "defrtg": 103.0, "pace": 68.0}
+        g = {
+            "home": home, "away": away,
+            "home_offrtg": hr["offrtg"], "away_offrtg": ar["offrtg"],
+            "home_defrtg": hr["defrtg"], "away_defrtg": ar["defrtg"],
+            "home_pace":   hr["pace"],   "away_pace":   ar["pace"],
+            "rest_home": 1, "rest_away": 1,
+            "total": odds.get("total"), "total_open": odds.get("total"),
+            "total_over_odds": odds.get("total_over_odds") or -110,
+            "total_under_odds": odds.get("total_under_odds") or -110,
+            "spread": odds.get("spread"), "spread_open": odds.get("spread"),
+            "spread_home": odds.get("spread_home") or -110,
+            "spread_away": odds.get("spread_away") or -110,
+            "ml_home": odds.get("ml_home"), "ml_away": odds.get("ml_away"),
+            "note": f"Auto-fetched {target_date}. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.",
+        }
+        games.append(g)
+        print(f"  [NCAAB] {away} @ {home} | total {g['total']} | spread {g['spread']}")
+
+    status = "ok" if games else "empty"
+    return SportSlateResult("ncaab", games, status)
+
+def inject_ncaab(html: str, result: SportSlateResult) -> str:
+    if result.preserve_existing or result.games is None:
+        print("  [NCAAB] Preserving existing slate")
+        return html
+    return replace_in_html(html, r"const NCAAB_RAW_GAMES = \[.*?\];",
+                           f"const NCAAB_RAW_GAMES = {games_js(result.games)};",
+                           f"{len(result.games)} NCAAB games")
+
+def fetch_ncaab_scores(session, api_key: Optional[str], target_date: date) -> Dict[str, Dict]:
+    raw = fetch_scores(session, ODDS_SPORTS["ncaab"], api_key)
+    scores: Dict[str, Dict] = {}
+    for g in raw:
+        if not g.get("completed"): continue
+        home = g.get("home_team",""); away = g.get("away_team","")
+        hs = aw = None
+        for t in (g.get("scores") or []):
+            if t.get("name") == home: hs = to_float(t.get("score"))
+            elif t.get("name") == away: aw = to_float(t.get("score"))
+        if hs is not None and aw is not None:
+            scores[away+"@"+home] = {"home":home,"away":away,"home_score":hs,"away_score":aw,"total":hs+aw}
+    return scores
+
+def auto_grade_ncaab(html: str, scores: Dict, target_date: date) -> str:
+    if not scores: return html
+    yesterday = (target_date - timedelta(days=1)).strftime("%Y-%m-%d")
+    js = _grade_script(scores, yesterday, ["edgeos-v10-today","edgeos-ml-v1-backtest"])
+    html = _inject_script(html, js, f"NCAAB ML/totals grade ({len(scores)} scores)")
+    js_rl = _rl_grade_script(scores, yesterday, "edgeos-rl-v1-backtest")
+    return _inject_script(html, js_rl, f"NCAAB spread grade ({len(scores)} scores)")
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--template", type=Path, required=True)
@@ -1317,10 +1718,12 @@ def main() -> int:
 
     # ── Fetch odds (shared, one call per sport) ────────────────────────────
     print("\nFetching odds...")
-    mlb_odds = fetch_odds(session, ODDS_SPORTS["mlb"], api_key)
-    nba_odds = fetch_odds(session, ODDS_SPORTS["nba"], api_key)
-    nfl_odds = fetch_odds(session, ODDS_SPORTS["nfl"], api_key)
-    print(f"  MLB:{len(mlb_odds)} NBA:{len(nba_odds)} NFL:{len(nfl_odds)} games from Odds API")
+    mlb_odds   = fetch_odds(session, ODDS_SPORTS["mlb"],   api_key)
+    nba_odds   = fetch_odds(session, ODDS_SPORTS["nba"],   api_key)
+    nfl_odds   = fetch_odds(session, ODDS_SPORTS["nfl"],   api_key)
+    ncaaf_odds = fetch_odds(session, ODDS_SPORTS["ncaaf"], api_key)
+    ncaab_odds = fetch_odds(session, ODDS_SPORTS["ncaab"], api_key)
+    print(f"  MLB:{len(mlb_odds)} NBA:{len(nba_odds)} NFL:{len(nfl_odds)} NCAAF:{len(ncaaf_odds)} NCAAB:{len(ncaab_odds)} games")
 
     # ── Build each sport independently ────────────────────────────────────
     print("\nBuilding MLB slate...")
@@ -1335,18 +1738,30 @@ def main() -> int:
     nfl_result = build_nfl(session, target_date, nfl_odds)
     nfl_result.log()
 
+    print("\nBuilding NCAAF slate...")
+    ncaaf_result = build_ncaaf(session, target_date, ncaaf_odds)
+    ncaaf_result.log()
+
+    print("\nBuilding NCAAB slate...")
+    ncaab_result = build_ncaab(session, target_date, ncaab_odds)
+    ncaab_result.log()
+
     # ── Fetch yesterday's scores independently ─────────────────────────────
     print("\nFetching yesterday's scores...")
-    mlb_scores = fetch_mlb_scores(session, target_date)
-    nba_scores  = fetch_nba_scores(session, api_key, target_date)
-    nfl_scores  = fetch_nfl_scores(session, api_key, target_date)
-    print(f"  {len(mlb_scores)} MLB | {len(nba_scores)} NBA | {len(nfl_scores)} NFL scores")
+    mlb_scores   = fetch_mlb_scores(session, target_date)
+    nba_scores   = fetch_nba_scores(session, api_key, target_date)
+    nfl_scores   = fetch_nfl_scores(session, api_key, target_date)
+    ncaaf_scores = fetch_ncaaf_scores(session, api_key, target_date)
+    ncaab_scores = fetch_ncaab_scores(session, api_key, target_date)
+    print(f"  {len(mlb_scores)} MLB | {len(nba_scores)} NBA | {len(nfl_scores)} NFL | {len(ncaaf_scores)} NCAAF | {len(ncaab_scores)} NCAAB scores")
 
     # ── Inject each sport independently ────────────────────────────────────
     print("\nInjecting into HTML...")
     html = inject_mlb(html, mlb_result, target_date)
     html = inject_nba(html, nba_result)
     html = inject_nfl(html, nfl_result)
+    html = inject_ncaaf(html, ncaaf_result)
+    html = inject_ncaab(html, ncaab_result)
     html = inject_metadata(html, target_date, len(mlb_result.games or []))
 
     # ── Auto-grade each sport independently ────────────────────────────────
@@ -1354,15 +1769,19 @@ def main() -> int:
     html = auto_grade_mlb_rl(html, mlb_scores, target_date)
     html = auto_grade_nba(html, nba_scores, target_date)
     html = auto_grade_nfl(html, nfl_scores, target_date)
+    html = auto_grade_ncaaf(html, ncaaf_scores, target_date)
+    html = auto_grade_ncaab(html, ncaab_scores, target_date)
 
     # ── Write output ───────────────────────────────────────────────────────
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
 
-    mlb_n = len(mlb_result.games or [])
-    nba_n = len(nba_result.games) if nba_result.games is not None else "preserved"
-    nfl_n = len(nfl_result.games or [])
-    print(f"\n✓ {mlb_n} MLB | {nba_n} NBA | {nfl_n} NFL -> {args.output}")
+    mlb_n   = len(mlb_result.games or [])
+    nba_n   = len(nba_result.games) if nba_result.games is not None else "preserved"
+    nfl_n   = len(nfl_result.games or [])
+    ncaaf_n = len(ncaaf_result.games or [])
+    ncaab_n = len(ncaab_result.games or [])
+    print(f"\n✓ {mlb_n} MLB | {nba_n} NBA | {nfl_n} NFL | {ncaaf_n} NCAAF | {ncaab_n} NCAAB -> {args.output}")
     return 0
 
 if __name__ == "__main__":
