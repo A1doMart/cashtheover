@@ -1764,6 +1764,9 @@ def main() -> int:
     html = inject_ncaab(html, ncaab_result)
     html = inject_metadata(html, target_date, len(mlb_result.games or []))
 
+    # ── Backfill: grade ungraded picks from last 30 days ──────────────────
+    html = run_backfill(session, html, target_date, days_back=30)
+
     # ── Auto-grade each sport independently ────────────────────────────────
     html = auto_grade_mlb(html, mlb_scores, target_date)
     html = auto_grade_mlb_rl(html, mlb_scores, target_date)
