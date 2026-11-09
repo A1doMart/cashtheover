@@ -276,9 +276,9 @@ body{padding:14px}
 <div class="wrap">
 
 <div class="hdr">
-  <div class="brand">EDGE<em>OS</em><sub id="brand-sub">v10+ML+RL | 2026-11-08</sub></div>
+  <div class="brand">EDGE<em>OS</em><sub id="brand-sub">v10+ML+RL | 2026-11-09</sub></div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <div class="live-pill"><span class="ldot"></span><span id="pill-text">0 GAMES · NOV 08</span></div>
+    <div class="live-pill"><span class="ldot"></span><span id="pill-text">0 GAMES · NOV 09</span></div>
     <button onclick="fetchTodaySlate()" style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:var(--c2);border:1px solid var(--b1);border-radius:999px;color:var(--t3);cursor:pointer" id="refresh-btn">⟳ REFRESH</button>
   </div>
 </div>
@@ -390,7 +390,7 @@ body{padding:14px}
 <div class="sumline" id="sumline">Loading...</div>
 <div id="cards"></div>
 
-<div class="footer" id="footer-text">EdgeOS v10+ML+RL | <span id="footer-date">NOV 08 2026</span> | Totals: Seeded NB MC | ML: Logit win prob | RL: Margin simulation | Research only — not validated</div>
+<div class="footer" id="footer-text">EdgeOS v10+ML+RL | <span id="footer-date">NOV 09 2026</span> | Totals: Seeded NB MC | ML: Logit win prob | RL: Margin simulation | Research only — not validated</div>
 
 </div><!-- /wrap -->
 <script>
@@ -1296,13 +1296,14 @@ function projectNFLGame(raw){
 // NBA SLATE — April 19 2026
 // ════════════════════════════════════════════════════════════
 const NBA_RAW_GAMES = [
-  {home:'Chicago Bulls',away:'Philadelphia 76ers',home_offrtg:114.9,away_offrtg:113.8,home_defrtg:116.4,away_defrtg:116.3,home_pace:98.1,away_pace:96.1,rest_home:1,rest_away:1,total:238.5,total_open:238.5,total_over_odds:-110,total_under_odds:-110,spread:9.5,spread_open:9.5,spread_home:-115,spread_away:-105,ml_home:329,ml_away:-420,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'},
-  {home:'Detroit Pistons',away:'Los Angeles Lakers',home_offrtg:117.1,away_offrtg:117.6,home_defrtg:109.6,away_defrtg:114.8,home_pace:98.9,away_pace:98.2,rest_home:1,rest_away:1,total:218.5,total_open:218.5,total_over_odds:-105,total_under_odds:-115,spread:-7.5,spread_open:-7.5,spread_home:-103,spread_away:-118,ml_home:-279,ml_away:228,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'},
-  {home:'Minnesota Timberwolves',away:'Utah Jazz',home_offrtg:118.2,away_offrtg:110.8,home_defrtg:113.4,away_defrtg:119.4,home_pace:97.9,away_pace:98.6,rest_home:1,rest_away:1,total:221.5,total_open:221.5,total_over_odds:-112,total_under_odds:-108,spread:-11.5,spread_open:-11.5,spread_home:-115,spread_away:-105,ml_home:-650,ml_away:470,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'},
-  {home:'Dallas Mavericks',away:'Brooklyn Nets',home_offrtg:118.8,away_offrtg:109.8,home_defrtg:116.2,away_defrtg:120.6,home_pace:97.6,away_pace:97.3,rest_home:1,rest_away:1,total:222.5,total_open:222.5,total_over_odds:-110,total_under_odds:-110,spread:-7.5,spread_open:-7.5,spread_home:-113,spread_away:-107,ml_home:-325,ml_away:262,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'},
-  {home:'Milwaukee Bucks',away:'Boston Celtics',home_offrtg:116.8,away_offrtg:120.5,home_defrtg:115.2,away_defrtg:112.6,home_pace:98.6,away_pace:97.8,rest_home:1,rest_away:1,total:221.5,total_open:221.5,total_over_odds:-112,total_under_odds:-108,spread:12.5,spread_open:12.5,spread_home:-108,spread_away:-111,ml_home:530,ml_away:-750,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'},
-  {home:'LA Clippers',away:'New Orleans Pelicans',home_offrtg:116.2,away_offrtg:113.2,home_defrtg:115.6,away_defrtg:116.4,home_pace:98.3,away_pace:97.2,rest_home:1,rest_away:1,total:226.5,total_open:226.5,total_over_odds:-108,total_under_odds:-112,spread:1.5,spread_open:1.5,spread_home:-110,spread_away:-110,ml_home:103,ml_away:-121,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'},
-  {home:'Sacramento Kings',away:'Miami Heat',home_offrtg:117.4,away_offrtg:118.6,home_defrtg:116.8,away_defrtg:113.0,home_pace:100.4,away_pace:97.4,rest_home:1,rest_away:1,total:237.5,total_open:237.5,total_over_odds:-110,total_under_odds:-110,spread:10.5,spread_open:10.5,spread_home:-112,spread_away:-108,ml_home:346,ml_away:-446,note:'Auto-fetched 2026-11-08. Ratings: 2025-26 season. Odds: The Odds API.'}
+  {home:'Atlanta Hawks',away:'Los Angeles Lakers',home_offrtg:118.4,away_offrtg:117.6,home_defrtg:117.8,away_defrtg:114.8,home_pace:100.2,away_pace:98.2,rest_home:1,rest_away:1,total:233.5,total_open:233.5,total_over_odds:-114,total_under_odds:-106,spread:-2.5,spread_open:-2.5,spread_home:-114,spread_away:-106,ml_home:-144,ml_away:121,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Charlotte Hornets',away:'Cleveland Cavaliers',home_offrtg:113.6,away_offrtg:117.8,home_defrtg:118.2,away_defrtg:109.4,home_pace:99.4,away_pace:95.2,rest_home:1,rest_away:1,total:215.5,total_open:215.5,total_over_odds:-107,total_under_odds:-113,spread:9.5,spread_open:9.5,spread_home:-113,spread_away:-107,ml_home:282,ml_away:-353,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Detroit Pistons',away:'Washington Wizards',home_offrtg:117.1,away_offrtg:110.4,home_defrtg:109.6,away_defrtg:121.3,home_pace:98.9,away_pace:98.7,rest_home:1,rest_away:1,total:218.5,total_open:218.5,total_over_odds:-114,total_under_odds:-106,spread:-9.5,spread_open:-9.5,spread_home:-106,spread_away:-114,ml_home:-411,ml_away:323,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Toronto Raptors',away:'Memphis Grizzlies',home_offrtg:114.2,away_offrtg:115.8,home_defrtg:113.3,away_defrtg:115.2,home_pace:97.6,away_pace:98.8,rest_home:1,rest_away:1,total:225.5,total_open:225.5,total_over_odds:-105,total_under_odds:-115,spread:2.5,spread_open:2.5,spread_home:-114,spread_away:-106,ml_home:109,ml_away:-129,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Dallas Mavericks',away:'Indiana Pacers',home_offrtg:118.8,away_offrtg:119.2,home_defrtg:116.2,away_defrtg:116.1,home_pace:97.6,away_pace:101.3,rest_home:1,rest_away:1,total:226.5,total_open:226.5,total_over_odds:-109,total_under_odds:-111,spread:-4.5,spread_open:-4.5,spread_home:-111,spread_away:-109,ml_home:-179,ml_away:150,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Houston Rockets',away:'Denver Nuggets',home_offrtg:114.8,away_offrtg:119.8,home_defrtg:113.4,away_defrtg:114.2,home_pace:97.8,away_pace:98.4,rest_home:1,rest_away:1,total:223.5,total_open:223.5,total_over_odds:-108,total_under_odds:-112,spread:-4.5,spread_open:-4.5,spread_home:-105,spread_away:-115,ml_home:-173,ml_away:146,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Phoenix Suns',away:'San Antonio Spurs',home_offrtg:115.6,away_offrtg:119.4,home_defrtg:117.4,away_defrtg:111.5,home_pace:99.1,away_pace:99.8,rest_home:1,rest_away:1,total:226.5,total_open:226.5,total_over_odds:-106,total_under_odds:-114,spread:8.5,spread_open:8.5,spread_home:-110,spread_away:-110,ml_home:296,ml_away:-372,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'},
+  {home:'Golden State Warriors',away:'New Orleans Pelicans',home_offrtg:116.4,away_offrtg:113.2,home_defrtg:114.9,away_defrtg:116.4,home_pace:99.6,away_pace:97.2,rest_home:1,rest_away:1,total:229.5,total_open:229.5,total_over_odds:-106,total_under_odds:-114,spread:-11.5,spread_open:-11.5,spread_home:-114,spread_away:-106,ml_home:-569,ml_away:426,note:'Auto-fetched 2026-11-09. Ratings: 2025-26 season. Odds: The Odds API.'}
 ];
 let NBA_CURRENT_SLATE = NBA_RAW_GAMES;
 
@@ -1310,19 +1311,8 @@ let NBA_CURRENT_SLATE = NBA_RAW_GAMES;
 // NFL SLATE — Empty
 // ════════════════════════════════════════════════════════════
 const NFL_RAW_GAMES = [
-  {home:'Miami Dolphins',away:'Detroit Lions',home_off_epa:0.038,away_off_epa:0.168,home_def_epa:0.042,away_def_epa:0.018,rest_home:7,rest_away:7,total:43.5,total_open:43.5,total_over_odds:-122,total_under_odds:-108,spread:6.5,spread_open:6.5,spread_home:-113,spread_away:-117,ml_home:246,ml_away:-347,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'New Orleans Saints',away:'Cleveland Browns',home_off_epa:-0.055,away_off_epa:-0.062,home_def_epa:-0.019,away_def_epa:-0.008,rest_home:7,rest_away:7,total:37.5,total_open:37.5,total_over_odds:-117,total_under_odds:-112,spread:-4.5,spread_open:-4.5,spread_home:-120,spread_away:-110,ml_home:-240,ml_away:177,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Kansas City Chiefs',away:'New York Jets',home_off_epa:0.098,away_off_epa:-0.042,home_def_epa:-0.089,away_def_epa:-0.015,rest_home:7,rest_away:7,total:47.5,total_open:47.5,total_over_odds:-115,total_under_odds:-115,spread:-7.5,spread_open:-7.5,spread_home:-122,spread_away:-108,ml_home:-535,ml_away:355,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Philadelphia Eagles',away:'New York Giants',home_off_epa:0.12,away_off_epa:-0.088,home_def_epa:-0.055,away_def_epa:0.062,rest_home:7,rest_away:7,total:44.5,total_open:44.5,total_over_odds:-113,total_under_odds:-117,spread:1.5,spread_open:1.5,spread_home:-131,spread_away:-101,ml_home:-110,ml_away:-120,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Carolina Panthers',away:'Denver Broncos',home_off_epa:-0.115,away_off_epa:0.022,home_def_epa:0.071,away_def_epa:-0.085,rest_home:7,rest_away:7,total:44.5,total_open:44.5,total_over_odds:-119,total_under_odds:-111,spread:10.5,spread_open:10.5,spread_home:-117,spread_away:-113,ml_home:393,ml_away:-610,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Indianapolis Colts',away:'Dallas Cowboys',home_off_epa:-0.009,away_off_epa:0.028,home_def_epa:0.008,away_def_epa:-0.012,rest_home:7,rest_away:7,total:53.5,total_open:53.5,total_over_odds:-119,total_under_odds:-111,spread:3.5,spread_open:3.5,spread_home:-128,spread_away:-103,ml_home:143,ml_away:-191,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Washington Commanders',away:'Los Angeles Rams',home_off_epa:0.088,away_off_epa:0.095,home_def_epa:-0.031,away_def_epa:-0.009,rest_home:7,rest_away:7,total:49.5,total_open:49.5,total_over_odds:-120,total_under_odds:-110,spread:-1.5,spread_open:-1.5,spread_home:-113,spread_away:-117,ml_home:-127,ml_away:-104,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Los Angeles Chargers',away:'Houston Texans',home_off_epa:0.048,away_off_epa:0.063,home_def_epa:-0.044,away_def_epa:-0.048,rest_home:7,rest_away:7,total:40.5,total_open:40.5,total_over_odds:-110,total_under_odds:-110,spread:5.5,spread_open:5.5,spread_home:-112,spread_away:-108,ml_home:190,ml_away:-230,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Seattle Seahawks',away:'Arizona Cardinals',home_off_epa:0.031,away_off_epa:0.019,home_def_epa:0.022,away_def_epa:0.031,rest_home:7,rest_away:7,total:39.5,total_open:39.5,total_over_odds:-112,total_under_odds:-108,spread:-8.5,spread_open:-8.5,spread_home:-110,spread_away:-110,ml_home:-440,ml_away:340,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'New England Patriots',away:'Green Bay Packers',home_off_epa:-0.108,away_off_epa:0.071,home_def_epa:0.055,away_def_epa:-0.072,rest_home:7,rest_away:7,total:44.5,total_open:44.5,total_over_odds:-112,total_under_odds:-108,spread:-3.0,spread_open:-3.0,spread_home:-115,spread_away:-105,ml_home:-170,ml_away:142,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'San Francisco 49ers',away:'Las Vegas Raiders',home_off_epa:0.065,away_off_epa:-0.079,home_def_epa:-0.021,away_def_epa:0.055,rest_home:7,rest_away:7,total:51.5,total_open:51.5,total_over_odds:-118,total_under_odds:-102,spread:-8.5,spread_open:-8.5,spread_home:-112,spread_away:-108,ml_home:-440,ml_away:340,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Chicago Bears',away:'Tampa Bay Buccaneers',home_off_epa:-0.021,away_off_epa:0.055,home_def_epa:-0.018,away_def_epa:0.008,rest_home:7,rest_away:7,total:47.5,total_open:47.5,total_over_odds:-108,total_under_odds:-112,spread:-6.0,spread_open:-6.0,spread_home:-112,spread_away:-108,ml_home:-270,ml_away:220,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'},
-  {home:'Minnesota Vikings',away:'Buffalo Bills',home_off_epa:0.132,away_off_epa:0.175,home_def_epa:0.012,away_def_epa:-0.041,rest_home:7,rest_away:7,total:43.5,total_open:43.5,total_over_odds:-118,total_under_odds:-102,spread:3.0,spread_open:3.0,spread_home:-102,spread_away:-118,ml_home:145,ml_away:-175,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. EPA unavailable — DQ will be lower.'}
+  {home:'Minnesota Vikings',away:'Buffalo Bills',home_off_epa:0.132,away_off_epa:0.175,home_def_epa:0.012,away_def_epa:-0.041,rest_home:7,rest_away:7,total:45.5,total_open:45.5,total_over_odds:-115,total_under_odds:-105,spread:3.5,spread_open:3.5,spread_home:-115,spread_away:-105,ml_home:164,ml_away:-198,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. EPA unavailable — DQ will be lower.'},
+  {home:'New York Giants',away:'Washington Commanders',home_off_epa:-0.088,away_off_epa:0.088,home_def_epa:0.062,away_def_epa:-0.031,rest_home:7,rest_away:7,total:42.5,total_open:42.5,total_over_odds:-105,total_under_odds:-115,spread:-2.5,spread_open:-2.5,spread_home:-110,spread_away:-110,ml_home:-130,ml_away:110,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. EPA unavailable — DQ will be lower.'}
 ];
 let NFL_CURRENT_SLATE = NFL_RAW_GAMES;
 
@@ -1510,46 +1500,52 @@ function projectNCAABGame(raw) {
 // NCAAF + NCAAB SLATES — Offseason
 // ════════════════════════════════════════════════════════════
 const NCAAF_RAW_GAMES = [
-  {home:'Akron Zips',away:'Western Michigan Broncos',home_sp_plus:-8.2,away_sp_plus:13.9,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:47.5,total_open:47.5,total_over_odds:-110,total_under_odds:-110,spread:14.0,spread_open:14.0,spread_home:-110,spread_away:-110,ml_home:470,ml_away:-650,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. SP+: home=-8.2 away=13.9. Source: 2024 final SP+ ratings.'},
-  {home:'Bowling Green Falcons',away:'Kent State Golden Flashes',home_sp_plus:-4.4,away_sp_plus:-8.6,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:44.5,total_open:44.5,total_over_odds:-118,total_under_odds:-102,spread:-5.5,spread_open:-5.5,spread_home:-110,spread_away:-110,ml_home:-205,ml_away:170,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. SP+: home=-4.4 away=-8.6. Source: 2024 final SP+ ratings.'},
-  {home:'Miami (OH) RedHawks',away:'Ohio Bobcats',home_sp_plus:17.1,away_sp_plus:2.3,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:47.5,total_open:47.5,total_over_odds:-118,total_under_odds:-102,spread:-1.5,spread_open:-1.5,spread_home:-110,spread_away:-110,ml_home:-118,ml_away:-102,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. SP+: home=17.1 away=2.3. Source: 2024 final SP+ ratings.'},
-  {home:'Ball State Cardinals',away:'Buffalo Bulls',home_sp_plus:0.3,away_sp_plus:1.3,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:51.5,total_open:51.5,total_over_odds:100,total_under_odds:-120,spread:3.0,spread_open:3.0,spread_home:-110,spread_away:-110,ml_home:120,ml_away:-142,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. SP+: home=0.3 away=1.3. Source: 2024 final SP+ ratings.'},
-  {home:'Central Michigan Chippewas',away:'Sacramento State Hornets',home_sp_plus:13.9,away_sp_plus:null,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:44.5,total_open:44.5,total_over_odds:-110,total_under_odds:-110,spread:-15.5,spread_open:-15.5,spread_home:-110,spread_away:-110,ml_home:-750,ml_away:525,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. SP+: home=13.9 away=None. Source: 2024 final SP+ ratings.'},
-  {home:'Toledo Rockets',away:'UMass Minutemen',home_sp_plus:null,away_sp_plus:null,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:53.5,total_open:53.5,total_over_odds:-105,total_under_odds:-115,spread:-14.0,spread_open:-14.0,spread_home:-110,spread_away:-110,ml_home:-575,ml_away:425,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-08. SP+: home=None away=None. Source: 2024 final SP+ ratings.'}
+  {home:'Akron Zips',away:'Western Michigan Broncos',home_sp_plus:-8.2,away_sp_plus:13.9,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:48.5,total_open:48.5,total_over_odds:-102,total_under_odds:-118,spread:14.0,spread_open:14.0,spread_home:-110,spread_away:-110,ml_home:455,ml_away:-625,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=-8.2 away=13.9. Source: 2024 final SP+ ratings.'},
+  {home:'Bowling Green Falcons',away:'Kent State Golden Flashes',home_sp_plus:-4.4,away_sp_plus:-8.6,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:44.5,total_open:44.5,total_over_odds:-108,total_under_odds:-112,spread:-5.5,spread_open:-5.5,spread_home:-108,spread_away:-112,ml_home:-218,ml_away:180,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=-4.4 away=-8.6. Source: 2024 final SP+ ratings.'},
+  {home:'Miami (OH) RedHawks',away:'Ohio Bobcats',home_sp_plus:17.1,away_sp_plus:2.3,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:47.5,total_open:47.5,total_over_odds:-102,total_under_odds:-118,spread:1.5,spread_open:1.5,spread_home:-112,spread_away:-108,ml_home:-102,ml_away:-118,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=17.1 away=2.3. Source: 2024 final SP+ ratings.'},
+  {home:'Ball State Cardinals',away:'Buffalo Bulls',home_sp_plus:0.3,away_sp_plus:1.3,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:51.5,total_open:51.5,total_over_odds:-105,total_under_odds:-115,spread:2.5,spread_open:2.5,spread_home:-108,spread_away:-112,ml_home:114,ml_away:-135,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=0.3 away=1.3. Source: 2024 final SP+ ratings.'},
+  {home:'Central Michigan Chippewas',away:'Sacramento State Hornets',home_sp_plus:13.9,away_sp_plus:null,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:43.5,total_open:43.5,total_over_odds:-115,total_under_odds:-105,spread:-18.5,spread_open:-18.5,spread_home:-105,spread_away:-115,ml_home:-1050,ml_away:675,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=13.9 away=None. Source: 2024 final SP+ ratings.'},
+  {home:'Toledo Rockets',away:'UMass Minutemen',home_sp_plus:null,away_sp_plus:null,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:52.5,total_open:52.5,total_over_odds:-105,total_under_odds:-115,spread:-14.5,spread_open:-14.5,spread_home:-108,spread_away:-112,ml_home:-625,ml_away:455,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=None away=None. Source: 2024 final SP+ ratings.'},
+  {home:'South Florida Bulls',away:'Memphis Tigers',home_sp_plus:3.5,away_sp_plus:8.0,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:49.5,total_open:49.5,total_over_odds:-115,total_under_odds:-105,spread:4.0,spread_open:4.0,spread_home:-110,spread_away:-110,ml_home:160,ml_away:-192,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=3.5 away=8.0. Source: 2024 final SP+ ratings.'},
+  {home:'UL Monroe Warhawks',away:'Louisiana Ragin Cajuns',home_sp_plus:null,away_sp_plus:1.5,home_off_epa:null,away_off_epa:null,home_def_epa:null,away_def_epa:null,rest_home:7,rest_away:7,total:48.5,total_open:48.5,total_over_odds:-115,total_under_odds:-105,spread:10.5,spread_open:10.5,spread_home:-110,spread_away:-110,ml_home:320,ml_away:-410,outdoor:true,wind:null,temp:null,note:'Auto-fetched 2026-11-09. SP+: home=None away=1.5. Source: 2024 final SP+ ratings.'}
 ];
 let NCAAF_CURRENT_SLATE = NCAAF_RAW_GAMES;
 const NCAAB_RAW_GAMES = [
-  {home:'St. John\'s Red Storm',away:'Iona Gaels',home_offrtg:118.4,away_offrtg:103.0,home_defrtg:93.6,away_defrtg:103.0,home_pace:69.1,away_pace:68.0,rest_home:1,rest_away:1,total:163.5,total_open:163.5,total_over_odds:-120,total_under_odds:-110,spread:-44.5,spread_open:-44.5,spread_home:-105,spread_away:-125,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'South Carolina Gamecocks',away:'SE Missouri St Redhawks',home_offrtg:102.0,away_offrtg:112.6,home_defrtg:97.8,away_defrtg:94.4,home_pace:68.0,away_pace:68.8,rest_home:1,rest_away:1,total:140.5,total_open:140.5,total_over_odds:-120,total_under_odds:-110,spread:-14.5,spread_open:-14.5,spread_home:-110,spread_away:-120,ml_home:-2100,ml_away:1000,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Bryant Bulldogs',away:'Fairfield Stags',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:130.5,total_open:130.5,total_over_odds:-115,total_under_odds:-115,spread:-1.5,spread_open:-1.5,spread_home:105,spread_away:-135,ml_home:-120,ml_away:-110,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Virginia Cavaliers',away:'Arkansas Razorbacks',home_offrtg:110.8,away_offrtg:117.6,home_defrtg:90.4,away_defrtg:92.1,home_pace:59.4,away_pace:68.2,rest_home:1,rest_away:1,total:155.5,total_open:155.5,total_over_odds:-110,total_under_odds:-120,spread:-9.5,spread_open:-9.5,spread_home:-120,spread_away:-110,ml_home:-560,ml_away:370,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'UMass Lowell River Hawks',away:'Marist Red Foxes',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:128.5,total_open:128.5,total_over_odds:-110,total_under_odds:-120,spread:-8.5,spread_open:-8.5,spread_home:-120,spread_away:-110,ml_home:-375,ml_away:270,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Maine Black Bears',away:'Manhattan Jaspers',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:125.5,total_open:125.5,total_over_odds:-110,total_under_odds:-120,spread:-4.5,spread_open:-4.5,spread_home:-120,spread_away:-110,ml_home:-260,ml_away:195,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Siena Saints',away:'Princeton Tigers',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:146.5,total_open:146.5,total_over_odds:-120,total_under_odds:-110,spread:-6.5,spread_open:-6.5,spread_home:-120,spread_away:-110,ml_home:-395,ml_away:280,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'New Hampshire Wildcats',away:'Sacred Heart Pioneers',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:143.5,total_open:143.5,total_over_odds:-115,total_under_odds:-115,spread:-1.5,spread_open:-1.5,spread_home:105,spread_away:-135,ml_home:-115,ml_away:-115,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Albany Great Danes',away:'Merrimack Warriors',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:135.5,total_open:135.5,total_over_odds:-105,total_under_odds:-115,spread:2.5,spread_open:2.5,spread_home:-115,spread_away:-105,ml_home:114,ml_away:-135,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Boise State Broncos',away:'Butler Bulldogs',home_offrtg:103.0,away_offrtg:107.6,home_defrtg:103.0,away_defrtg:94.8,home_pace:68.0,away_pace:67.6,rest_home:1,rest_away:1,total:159.5,total_open:159.5,total_over_odds:-105,total_under_odds:-115,spread:-2.5,spread_open:-2.5,spread_home:-110,spread_away:-110,ml_home:-148,ml_away:124,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Lehigh Mountain Hawks',away:'Brown Bears',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:138.5,total_open:138.5,total_over_odds:-105,total_under_odds:-115,spread:-5.5,spread_open:-5.5,spread_home:-105,spread_away:-115,ml_home:-225,ml_away:185,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Western Michigan Broncos',away:'Campbell Fighting Camels',home_offrtg:111.8,away_offrtg:103.0,home_defrtg:93.2,away_defrtg:103.0,home_pace:67.4,away_pace:68.0,rest_home:1,rest_away:1,total:151.5,total_open:151.5,total_over_odds:-110,total_under_odds:-110,spread:-3.5,spread_open:-3.5,spread_home:-115,spread_away:-105,ml_home:-192,ml_away:160,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Dartmouth Big Green',away:'Central Connecticut St Blue Devils',home_offrtg:103.0,away_offrtg:113.8,home_defrtg:103.0,away_defrtg:94.6,home_pace:68.0,away_pace:67.6,rest_home:1,rest_away:1,total:140.5,total_open:140.5,total_over_odds:-110,total_under_odds:-110,spread:-8.5,spread_open:-8.5,spread_home:-112,spread_away:-108,ml_home:-375,ml_away:295,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'St. Thomas (MN) Tommies',away:'Green Bay Phoenix',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:149.5,total_open:149.5,total_over_odds:-110,total_under_odds:-110,spread:-7.5,spread_open:-7.5,spread_home:-110,spread_away:-110,ml_home:-345,ml_away:275,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Vermont Catamounts',away:'Quinnipiac Bobcats',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:138.5,total_open:138.5,total_over_odds:-112,total_under_odds:-108,spread:-8.5,spread_open:-8.5,spread_home:-110,spread_away:-110,ml_home:-380,ml_away:300,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Air Force Falcons',away:'Idaho State Bengals',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:161.5,total_open:161.5,total_over_odds:-105,total_under_odds:-115,spread:-5.5,spread_open:-5.5,spread_home:-118,spread_away:-102,ml_home:-258,ml_away:210,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Drake Bulldogs',away:'Southern Jaguars',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:151.5,total_open:151.5,total_over_odds:-105,total_under_odds:-115,spread:-14.5,spread_open:-14.5,spread_home:-102,spread_away:-118,ml_home:-1100,ml_away:700,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Tennessee Tech Golden Eagles',away:'Western Kentucky Hilltoppers',home_offrtg:119.4,away_offrtg:117.4,home_defrtg:89.8,away_defrtg:91.6,home_pace:66.1,away_pace:67.6,rest_home:1,rest_away:1,total:164.5,total_open:164.5,total_over_odds:-110,total_under_odds:-110,spread:3.5,spread_open:3.5,spread_home:-118,spread_away:-102,ml_home:130,ml_away:-155,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Binghamton Bearcats',away:'Rider Broncs',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:138.5,total_open:138.5,total_over_odds:-108,total_under_odds:-112,spread:-7.5,spread_open:-7.5,spread_home:-108,spread_away:-112,ml_home:-325,ml_away:260,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'NJIT Highlanders',away:'Saint Peter\'s Peacocks',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:131.5,total_open:131.5,total_over_odds:-108,total_under_odds:-112,spread:1.5,spread_open:1.5,spread_home:-112,spread_away:-108,ml_home:102,ml_away:-122,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Nevada Wolf Pack',away:'Saint Mary\'s Gaels',home_offrtg:112.4,away_offrtg:113.2,home_defrtg:95.2,away_defrtg:94.2,home_pace:68.6,away_pace:63.8,rest_home:1,rest_away:1,total:146.5,total_open:146.5,total_over_odds:-108,total_under_odds:-112,spread:-1.5,spread_open:-1.5,spread_home:-110,spread_away:-110,ml_home:-125,ml_away:105,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Temple Owls',away:'Richmond Spiders',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:152.5,total_open:152.5,total_over_odds:-112,total_under_odds:-108,spread:1.5,spread_open:1.5,spread_home:-112,spread_away:-108,ml_home:100,ml_away:-120,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'CSU Bakersfield Roadrunners',away:'North Dakota St Bison',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:152.5,total_open:152.5,total_over_odds:-112,total_under_odds:-108,spread:2.5,spread_open:2.5,spread_home:-105,spread_away:-115,ml_home:120,ml_away:-142,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'William & Mary Tribe',away:'Norfolk St Spartans',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:158.5,total_open:158.5,total_over_odds:-110,total_under_odds:-110,spread:-10.5,spread_open:-10.5,spread_home:-115,spread_away:-105,ml_home:-575,ml_away:425,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'UTEP Miners',away:'Incarnate Word Cardinals',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:141.5,total_open:141.5,total_over_odds:-105,total_under_odds:-115,spread:-12.5,spread_open:-12.5,spread_home:-110,spread_away:-110,ml_home:-850,ml_away:575,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Penn State Nittany Lions',away:'Pittsburgh Panthers',home_offrtg:110.8,away_offrtg:114.4,home_defrtg:93.6,away_defrtg:92.2,home_pace:67.6,away_pace:67.6,rest_home:1,rest_away:1,total:153.5,total_open:153.5,total_over_odds:-110,total_under_odds:-110,spread:2.5,spread_open:2.5,spread_home:-110,spread_away:-110,ml_home:120,ml_away:-142,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'California Golden Bears',away:'Houston Cougars',home_offrtg:100.8,away_offrtg:118.6,home_defrtg:99.6,away_defrtg:88.4,home_pace:68.8,away_pace:65.2,rest_home:1,rest_away:1,total:143.5,total_open:143.5,total_over_odds:-105,total_under_odds:-115,spread:19.5,spread_open:19.5,spread_home:-112,spread_away:-108,ml_home:1400,ml_away:-3200,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Hawai\'i Rainbow Warriors',away:'UT-Arlington Mavericks',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:146.5,total_open:146.5,total_over_odds:-112,total_under_odds:-108,spread:-8.5,spread_open:-8.5,spread_home:-105,spread_away:-115,ml_home:-425,ml_away:330,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'USC Trojans',away:'Wichita St Shockers',home_offrtg:104.4,away_offrtg:103.0,home_defrtg:96.2,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:155.5,total_open:155.5,total_over_odds:-110,total_under_odds:-110,spread:-6.5,spread_open:-6.5,spread_home:-108,spread_away:-112,ml_home:-258,ml_away:210,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Ohio State Buckeyes',away:'Marshall Thundering Herd',home_offrtg:111.6,away_offrtg:103.0,home_defrtg:93.4,away_defrtg:103.0,home_pace:68.2,away_pace:68.0,rest_home:1,rest_away:1,total:158.0,total_open:158.0,total_over_odds:-110,total_under_odds:-110,spread:-25.5,spread_open:-25.5,spread_home:-115,spread_away:-105,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
-  {home:'Indiana Hoosiers',away:'Syracuse Orange',home_offrtg:113.2,away_offrtg:110.4,home_defrtg:92.8,away_defrtg:94.0,home_pace:67.2,away_pace:67.2,rest_home:1,rest_away:1,total:147.5,total_open:147.5,total_over_odds:-110,total_under_odds:-110,spread:-4.5,spread_open:-4.5,spread_home:-110,spread_away:-110,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-08. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'}
+  {home:'Ohio State Buckeyes',away:'Marshall Thundering Herd',home_offrtg:111.6,away_offrtg:103.0,home_defrtg:93.4,away_defrtg:103.0,home_pace:68.2,away_pace:68.0,rest_home:1,rest_away:1,total:165.5,total_open:165.5,total_over_odds:-115,total_under_odds:-115,spread:-35.5,spread_open:-35.5,spread_home:-110,spread_away:-120,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Pennsylvania Quakers',away:'Howard Bison',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:155.5,total_open:155.5,total_over_odds:-115,total_under_odds:-105,spread:-5.5,spread_open:-5.5,spread_home:-112,spread_away:-108,ml_home:-258,ml_away:210,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Indiana Hoosiers',away:'Syracuse Orange',home_offrtg:113.2,away_offrtg:110.4,home_defrtg:92.8,away_defrtg:94.0,home_pace:67.2,away_pace:67.2,rest_home:1,rest_away:1,total:146.5,total_open:146.5,total_over_odds:-112,total_under_odds:-108,spread:-5.5,spread_open:-5.5,spread_home:-112,spread_away:-108,ml_home:-250,ml_away:205,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Bowling Green Falcons',away:'Cleveland St Vikings',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:154.5,total_open:154.5,total_over_odds:-105,total_under_odds:-115,spread:-13.5,spread_open:-13.5,spread_home:-110,spread_away:-110,ml_home:-1000,ml_away:650,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Chicago St Cougars',away:'South Carolina St Bulldogs',home_offrtg:103.0,away_offrtg:102.0,home_defrtg:103.0,away_defrtg:97.8,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:144.5,total_open:144.5,total_over_odds:-108,total_under_odds:-112,spread:-2.5,spread_open:-2.5,spread_home:-102,spread_away:-118,ml_home:-135,ml_away:114,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Cincinnati Bearcats',away:'Minnesota Golden Gophers',home_offrtg:112.8,away_offrtg:109.8,home_defrtg:92.4,away_defrtg:93.2,home_pace:66.6,away_pace:67.8,rest_home:1,rest_away:1,total:144.5,total_open:144.5,total_over_odds:-105,total_under_odds:-115,spread:-7.5,spread_open:-7.5,spread_home:-115,spread_away:-105,ml_home:-345,ml_away:275,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Clemson Tigers',away:'North Dakota Fighting Hawks',home_offrtg:113.6,away_offrtg:103.0,home_defrtg:91.6,away_defrtg:103.0,home_pace:66.4,away_pace:68.0,rest_home:1,rest_away:1,total:154.5,total_open:154.5,total_over_odds:-110,total_under_odds:-110,spread:-24.5,spread_open:-24.5,spread_home:-105,spread_away:-115,ml_home:-6500,ml_away:2000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Coastal Carolina Chanticleers',away:'South Carolina Upstate Spartans',home_offrtg:103.0,away_offrtg:102.0,home_defrtg:103.0,away_defrtg:97.8,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:149.5,total_open:149.5,total_over_odds:-108,total_under_odds:-112,spread:-10.5,spread_open:-10.5,spread_home:-112,spread_away:-108,ml_home:-600,ml_away:440,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Columbia Lions',away:'Stonehill Skyhawks',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:143.5,total_open:143.5,total_over_odds:-112,total_under_odds:-108,spread:-13.5,spread_open:-13.5,spread_home:100,spread_away:-120,ml_home:-1000,ml_away:650,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Notre Dame Fighting Irish',away:'Eastern Illinois Panthers',home_offrtg:103.0,away_offrtg:115.4,home_defrtg:103.0,away_defrtg:91.8,home_pace:68.0,away_pace:66.2,rest_home:1,rest_away:1,total:140.5,total_open:140.5,total_over_odds:-105,total_under_odds:-115,spread:-27.5,spread_open:-27.5,spread_home:-115,spread_away:-105,ml_home:-50000,ml_away:4000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Georgia Bulldogs',away:'Florida Gulf Coast Eagles',home_offrtg:102.4,away_offrtg:121.2,home_defrtg:97.4,away_defrtg:90.1,home_pace:67.6,away_pace:67.8,rest_home:1,rest_away:1,total:163.5,total_open:163.5,total_over_odds:-108,total_under_odds:-112,spread:-22.5,spread_open:-22.5,spread_home:-105,spread_away:-115,ml_home:-3600,ml_away:1500,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Texas Longhorns',away:'Grambling St Tigers',home_offrtg:113.4,away_offrtg:103.0,home_defrtg:91.4,away_defrtg:103.0,home_pace:66.8,away_pace:68.0,rest_home:1,rest_away:1,total:155.5,total_open:155.5,total_over_odds:-108,total_under_odds:-112,spread:-37.5,spread_open:-37.5,spread_home:-115,spread_away:-105,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Jacksonville Dolphins',away:'UMKC Kangaroos',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:146.5,total_open:146.5,total_over_odds:-110,total_under_odds:-110,spread:-3.5,spread_open:-3.5,spread_home:-112,spread_away:-108,ml_home:-185,ml_away:154,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Towson Tigers',away:'LIU Sharks',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:140.5,total_open:140.5,total_over_odds:-112,total_under_odds:-108,spread:-7.5,spread_open:-7.5,spread_home:-115,spread_away:-105,ml_home:-380,ml_away:300,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Miami Hurricanes',away:'North Florida Ospreys',home_offrtg:103.0,away_offrtg:121.2,home_defrtg:103.0,away_defrtg:90.1,home_pace:68.0,away_pace:67.8,rest_home:1,rest_away:1,total:165.5,total_open:165.5,total_over_odds:-110,total_under_odds:-110,spread:-35.5,spread_open:-35.5,spread_home:-112,spread_away:-108,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Tennessee Volunteers',away:'Radford Highlanders',home_offrtg:119.4,away_offrtg:103.0,home_defrtg:89.8,away_defrtg:103.0,home_pace:66.1,away_pace:68.0,rest_home:1,rest_away:1,total:153.5,total_open:153.5,total_over_odds:-112,total_under_odds:-108,spread:-29.5,spread_open:-29.5,spread_home:-105,spread_away:-115,ml_home:-100000,ml_away:5000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'UConn Huskies',away:'Wagner Seahawks',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:139.5,total_open:139.5,total_over_odds:-115,total_under_odds:-105,spread:-39.5,spread_open:-39.5,spread_home:-115,spread_away:-105,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'UIC Flames',away:'UNC Greensboro Spartans',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:148.5,total_open:148.5,total_over_odds:-108,total_under_odds:-112,spread:-19.5,spread_open:-19.5,spread_home:-112,spread_away:-108,ml_home:-3600,ml_away:1500,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Alabama Crimson Tide',away:'Oakland Golden Grizzlies',home_offrtg:120.1,away_offrtg:103.0,home_defrtg:91.2,away_defrtg:103.0,home_pace:69.8,away_pace:68.0,rest_home:1,rest_away:1,total:170.5,total_open:170.5,total_over_odds:-110,total_under_odds:-110,spread:-32.5,spread_open:-32.5,spread_home:-108,spread_away:-112,ml_home:-100000,ml_away:5000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'UAB Blazers',away:'Florida A&M Rattlers',home_offrtg:103.0,away_offrtg:121.2,home_defrtg:103.0,away_defrtg:90.1,home_pace:68.0,away_pace:67.8,rest_home:1,rest_away:1,total:154.5,total_open:154.5,total_over_odds:-108,total_under_odds:-112,spread:-18.5,spread_open:-18.5,spread_home:-112,spread_away:-108,ml_home:-2800,ml_away:1300,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Mississippi St Bulldogs',away:'Jackson St Tigers',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:153.5,total_open:153.5,total_over_odds:-115,total_under_odds:-105,spread:-24.5,spread_open:-24.5,spread_home:-108,spread_away:-112,ml_home:-6500,ml_away:2000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Northwestern Wildcats',away:'Boston Univ. Terriers',home_offrtg:107.2,away_offrtg:103.0,home_defrtg:94.4,away_defrtg:103.0,home_pace:67.8,away_pace:68.0,rest_home:1,rest_away:1,total:143.5,total_open:143.5,total_over_odds:-110,total_under_odds:-110,spread:-13.5,spread_open:-13.5,spread_home:-110,spread_away:-110,ml_home:-1350,ml_away:800,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'LSU Tigers',away:'Louisiana Tech Bulldogs',home_offrtg:103.2,away_offrtg:103.0,home_defrtg:98.2,away_defrtg:103.0,home_pace:68.8,away_pace:68.0,rest_home:1,rest_away:1,total:148.5,total_open:148.5,total_over_odds:-105,total_under_odds:-115,spread:-29.5,spread_open:-29.5,spread_home:-112,spread_away:-108,ml_home:-100000,ml_away:5000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Missouri Tigers',away:'SIU-Edwardsville Cougars',home_offrtg:112.6,away_offrtg:103.0,home_defrtg:94.4,away_defrtg:103.0,home_pace:68.8,away_pace:68.0,rest_home:1,rest_away:1,total:149.5,total_open:149.5,total_over_odds:-105,total_under_odds:-115,spread:-29.5,spread_open:-29.5,spread_home:-112,spread_away:-108,ml_home:-100000,ml_away:5000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Oklahoma Sooners',away:'North Alabama Lions',home_offrtg:115.2,away_offrtg:120.1,home_defrtg:92.8,away_defrtg:91.2,home_pace:68.4,away_pace:69.8,rest_home:1,rest_away:1,total:147.5,total_open:147.5,total_over_odds:-105,total_under_odds:-115,spread:-28.5,spread_open:-28.5,spread_home:-108,spread_away:-112,ml_home:-20000,ml_away:3500,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Texas A&M Aggies',away:'UL Monroe Warhawks',home_offrtg:113.4,away_offrtg:103.0,home_defrtg:91.4,away_defrtg:103.0,home_pace:66.8,away_pace:68.0,rest_home:1,rest_away:1,total:169.5,total_open:169.5,total_over_odds:-110,total_under_odds:-110,spread:-36.5,spread_open:-36.5,spread_home:-105,spread_away:-115,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Purdue Boilermakers',away:'Illinois St Redbirds',home_offrtg:118.8,away_offrtg:115.4,home_defrtg:93.2,away_defrtg:91.8,home_pace:65.8,away_pace:66.2,rest_home:1,rest_away:1,total:143.5,total_open:143.5,total_over_odds:-115,total_under_odds:-105,spread:-15.5,spread_open:-15.5,spread_home:-105,spread_away:-115,ml_home:-1800,ml_away:1000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'DePaul Blue Demons',away:'Alabama A&M Bulldogs',home_offrtg:105.8,away_offrtg:120.1,home_defrtg:97.2,away_defrtg:91.2,home_pace:70.4,away_pace:69.8,rest_home:1,rest_away:1,total:139.5,total_open:139.5,total_over_odds:-115,total_under_odds:-105,spread:-24.5,spread_open:-24.5,spread_home:-105,spread_away:-115,ml_home:-8000,ml_away:2200,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Auburn Tigers',away:'Appalachian St Mountaineers',home_offrtg:103.8,away_offrtg:103.0,home_defrtg:97.8,away_defrtg:103.0,home_pace:68.4,away_pace:68.0,rest_home:1,rest_away:1,total:143.5,total_open:143.5,total_over_odds:-115,total_under_odds:-105,spread:-23.5,spread_open:-23.5,spread_home:-105,spread_away:-115,ml_home:-6500,ml_away:2000,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Seton Hall Pirates',away:'Charlotte 49ers',home_offrtg:109.2,away_offrtg:103.0,home_defrtg:94.2,away_defrtg:103.0,home_pace:68.8,away_pace:68.0,rest_home:1,rest_away:1,total:130.5,total_open:130.5,total_over_odds:-110,total_under_odds:-110,spread:-4.5,spread_open:-4.5,spread_home:-105,spread_away:-115,ml_home:-198,ml_away:164,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Oregon St Beavers',away:'Eastern Washington Eagles',home_offrtg:116.2,away_offrtg:105.2,home_defrtg:93.0,away_defrtg:96.4,home_pace:68.6,away_pace:69.2,rest_home:1,rest_away:1,total:162.5,total_open:162.5,total_over_odds:-108,total_under_odds:-112,spread:-17.5,spread_open:-17.5,spread_home:-102,spread_away:-118,ml_home:-2400,ml_away:1200,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Washington Huskies',away:'Miss Valley St Delta Devils',home_offrtg:105.2,away_offrtg:103.0,home_defrtg:96.4,away_defrtg:103.0,home_pace:69.2,away_pace:68.0,rest_home:1,rest_away:1,total:153.5,total_open:153.5,total_over_odds:-110,total_under_odds:-110,spread:-32.5,spread_open:-32.5,spread_home:-115,spread_away:-105,ml_home:null,ml_away:null,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Stanford Cardinal',away:'Rice Owls',home_offrtg:106.4,away_offrtg:103.0,home_defrtg:96.2,away_defrtg:103.0,home_pace:68.8,away_pace:68.0,rest_home:1,rest_away:1,total:145.5,total_open:145.5,total_over_odds:-108,total_under_odds:-112,spread:-18.5,spread_open:-18.5,spread_home:-108,spread_away:-112,ml_home:-3200,ml_away:1400,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Hawai\'i Rainbow Warriors',away:'Portland Pilots',home_offrtg:103.0,away_offrtg:103.0,home_defrtg:103.0,away_defrtg:103.0,home_pace:68.0,away_pace:68.0,rest_home:1,rest_away:1,total:156.5,total_open:156.5,total_over_odds:-115,total_under_odds:-105,spread:-8.5,spread_open:-8.5,spread_home:-108,spread_away:-112,ml_home:-360,ml_away:285,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'},
+  {home:'Florida St Seminoles',away:'Florida Gators',home_offrtg:121.2,away_offrtg:121.2,home_defrtg:90.1,away_defrtg:90.1,home_pace:67.8,away_pace:67.8,rest_home:1,rest_away:1,total:165.5,total_open:165.5,total_over_odds:-105,total_under_odds:-115,spread:9.5,spread_open:9.5,spread_home:-110,spread_away:-110,ml_home:425,ml_away:-575,note:'Auto-fetched 2026-11-09. ORtg/DRtg from 2024-25 KenPom final. Odds: The Odds API.'}
 ];
 let NCAAB_CURRENT_SLATE = NCAAB_RAW_GAMES;
 
@@ -2099,7 +2095,7 @@ document.getElementById('coverage-threshold').textContent=`${Math.round(HISTORY_
 // ════════════════════════════════════════════════════════════
 // AUTO-FETCH — MLB Stats API
 // ════════════════════════════════════════════════════════════
-const SLATE_DATE = '2026-11-08';
+const SLATE_DATE = '2026-11-09';
 let CURRENT_SLATE_DATE = SLATE_DATE;
 function localDate(){return new Date().toLocaleDateString('en-CA',{timeZone:'America/Chicago'});}
 function slateDate(){return CURRENT_SLATE_DATE;}
@@ -24507,6 +24503,240 @@ checkDateAndFetch();
 (function(){
   var scores={"Colgate Raiders@Drexel Dragons": {"home": "Drexel Dragons", "away": "Colgate Raiders", "home_score": 77.0, "away_score": 74.0, "total": 151.0}, "Toledo Rockets@Marshall Thundering Herd": {"home": "Marshall Thundering Herd", "away": "Toledo Rockets", "home_score": 76.0, "away_score": 81.0, "total": 157.0}, "UNC Wilmington Seahawks@East Carolina Pirates": {"home": "East Carolina Pirates", "away": "UNC Wilmington Seahawks", "home_score": 75.0, "away_score": 78.0, "total": 153.0}, "Lamar Cardinals@Abilene Christian Wildcats": {"home": "Abilene Christian Wildcats", "away": "Lamar Cardinals", "home_score": 83.0, "away_score": 81.0, "total": 164.0}, "CSU Fullerton Titans@South Dakota Coyotes": {"home": "South Dakota Coyotes", "away": "CSU Fullerton Titans", "home_score": 85.0, "away_score": 87.0, "total": 172.0}, "VCU Rams@Memphis Tigers": {"home": "Memphis Tigers", "away": "VCU Rams", "home_score": 89.0, "away_score": 88.0, "total": 177.0}, "Long Beach St 49ers@Montana St Bobcats": {"home": "Montana St Bobcats", "away": "Long Beach St 49ers", "home_score": 83.0, "away_score": 70.0, "total": 153.0}, "North Carolina Central Eagles@Longwood Lancers": {"home": "Longwood Lancers", "away": "North Carolina Central Eagles", "home_score": 80.0, "away_score": 75.0, "total": 155.0}, "LIU Sharks@La Salle Explorers": {"home": "La Salle Explorers", "away": "LIU Sharks", "home_score": 88.0, "away_score": 80.0, "total": 168.0}, "San Diego St Aztecs@Colorado Buffaloes": {"home": "Colorado Buffaloes", "away": "San Diego St Aztecs", "home_score": 66.0, "away_score": 77.0, "total": 143.0}, "Oakland Golden Grizzlies@UC Santa Barbara Gauchos": {"home": "UC Santa Barbara Gauchos", "away": "Oakland Golden Grizzlies", "home_score": 90.0, "away_score": 67.0, "total": 157.0}, "Samford Bulldogs@UNLV Rebels": {"home": "UNLV Rebels", "away": "Samford Bulldogs", "home_score": 88.0, "away_score": 79.0, "total": 167.0}, "Monmouth Hawks@Rhode Island Rams": {"home": "Rhode Island Rams", "away": "Monmouth Hawks", "home_score": 84.0, "away_score": 66.0, "total": 150.0}, "Lafayette Leopards@Saint Joseph's Hawks": {"home": "Saint Joseph's Hawks", "away": "Lafayette Leopards", "home_score": 67.0, "away_score": 57.0, "total": 124.0}, "Omaha Mavericks@Utah State Aggies": {"home": "Utah State Aggies", "away": "Omaha Mavericks", "home_score": 90.0, "away_score": 56.0, "total": 146.0}, "Northern Iowa Panthers@Furman Paladins": {"home": "Furman Paladins", "away": "Northern Iowa Panthers", "home_score": 98.0, "away_score": 83.0, "total": 181.0}, "New Mexico St Aggies@Gonzaga Bulldogs": {"home": "Gonzaga Bulldogs", "away": "New Mexico St Aggies", "home_score": 109.0, "away_score": 68.0, "total": 177.0}, "Washington St Cougars@High Point Panthers": {"home": "High Point Panthers", "away": "Washington St Cougars", "home_score": 83.0, "away_score": 71.0, "total": 154.0}, "Tenn-Martin Skyhawks@IUPUI Jaguars": {"home": "IUPUI Jaguars", "away": "Tenn-Martin Skyhawks", "home_score": 75.0, "away_score": 74.0, "total": 149.0}, "Old Dominion Monarchs@Bucknell Bison": {"home": "Bucknell Bison", "away": "Old Dominion Monarchs", "home_score": 62.0, "away_score": 82.0, "total": 144.0}, "SIU-Edwardsville Cougars@Lipscomb Bisons": {"home": "Lipscomb Bisons", "away": "SIU-Edwardsville Cougars", "home_score": 78.0, "away_score": 77.0, "total": 155.0}, "VMI Keydets@UTSA Roadrunners": {"home": "UTSA Roadrunners", "away": "VMI Keydets", "home_score": 70.0, "away_score": 68.0, "total": 138.0}, "Bellarmine Knights@Miami (OH) RedHawks": {"home": "Miami (OH) RedHawks", "away": "Bellarmine Knights", "home_score": 80.0, "away_score": 73.0, "total": 153.0}, "Prairie View Panthers@UT Rio Grande Valley Vaqueros": {"home": "UT Rio Grande Valley Vaqueros", "away": "Prairie View Panthers", "home_score": 68.0, "away_score": 63.0, "total": 131.0}, "Western Carolina Catamounts@UNC Asheville Bulldogs": {"home": "UNC Asheville Bulldogs", "away": "Western Carolina Catamounts", "home_score": 75.0, "away_score": 83.0, "total": 158.0}, "Hampton Pirates@GW Revolutionaries": {"home": "GW Revolutionaries", "away": "Hampton Pirates", "home_score": 75.0, "away_score": 61.0, "total": 136.0}, "Northern Arizona Lumberjacks@New Mexico Lobos": {"home": "New Mexico Lobos", "away": "Northern Arizona Lumberjacks", "home_score": 94.0, "away_score": 65.0, "total": 159.0}, "Morgan St Bears@Niagara Purple Eagles": {"home": "Niagara Purple Eagles", "away": "Morgan St Bears", "home_score": 67.0, "away_score": 73.0, "total": 140.0}, "Mercer Bears@Davidson Wildcats": {"home": "Davidson Wildcats", "away": "Mercer Bears", "home_score": 88.0, "away_score": 76.0, "total": 164.0}, "Northern Illinois Huskies@Dayton Flyers": {"home": "Dayton Flyers", "away": "Northern Illinois Huskies", "home_score": 76.0, "away_score": 81.0, "total": 157.0}, "St. Bonaventure Bonnies@Canisius Golden Griffins": {"home": "Canisius Golden Griffins", "away": "St. Bonaventure Bonnies", "home_score": 49.0, "away_score": 88.0, "total": 137.0}, "Houston Christian Huskies@Western Illinois Leathernecks": {"home": "Western Illinois Leathernecks", "away": "Houston Christian Huskies", "home_score": 67.0, "away_score": 74.0, "total": 141.0}, "Providence Friars@Nebraska Cornhuskers": {"home": "Nebraska Cornhuskers", "away": "Providence Friars", "home_score": 67.0, "away_score": 58.0, "total": 125.0}, "Denver Pioneers@UC Riverside Highlanders": {"home": "UC Riverside Highlanders", "away": "Denver Pioneers", "home_score": 64.0, "away_score": 60.0, "total": 124.0}, "Maryland Terrapins@Georgetown Hoyas": {"home": "Georgetown Hoyas", "away": "Maryland Terrapins", "home_score": 86.0, "away_score": 74.0, "total": 160.0}, "Bethune-Cookman Wildcats@Grand Canyon Antelopes": {"home": "Grand Canyon Antelopes", "away": "Bethune-Cookman Wildcats", "home_score": 99.0, "away_score": 81.0, "total": 180.0}, "Pacific Tigers@Bradley Braves": {"home": "Bradley Braves", "away": "Pacific Tigers", "home_score": 52.0, "away_score": 63.0, "total": 115.0}, "Evansville Purple Aces@Southern Indiana Screaming Eagles": {"home": "Southern Indiana Screaming Eagles", "away": "Evansville Purple Aces", "home_score": 76.0, "away_score": 78.0, "total": 154.0}, "Northwestern St Demons@Murray St Racers": {"home": "Murray St Racers", "away": "Northwestern St Demons", "home_score": 93.0, "away_score": 71.0, "total": 164.0}, "SE Louisiana Lions@Arkansas-Little Rock Trojans": {"home": "Arkansas-Little Rock Trojans", "away": "SE Louisiana Lions", "home_score": 79.0, "away_score": 83.0, "total": 162.0}, "Utah Valley Wolverines@Weber State Wildcats": {"home": "Weber State Wildcats", "away": "Utah Valley Wolverines", "home_score": 93.0, "away_score": 101.0, "total": 194.0}, "Sacramento St Hornets@Santa Clara Broncos": {"home": "Santa Clara Broncos", "away": "Sacramento St Hornets", "home_score": 83.0, "away_score": 77.0, "total": 160.0}, "Portland St Vikings@Seattle Redhawks": {"home": "Seattle Redhawks", "away": "Portland St Vikings", "home_score": 79.0, "away_score": 60.0, "total": 139.0}, "Fresno St Bulldogs@UC San Diego Tritons": {"home": "UC San Diego Tritons", "away": "Fresno St Bulldogs", "home_score": 81.0, "away_score": 65.0, "total": 146.0}, "San Jos\u00e9 St Spartans@UC Irvine Anteaters": {"home": "UC Irvine Anteaters", "away": "San Jos\u00e9 St Spartans", "home_score": 91.0, "away_score": 79.0, "total": 170.0}};
   var yesterday='2026-11-07';
+  try{
+    var rows=JSON.parse(localStorage.getItem('edgeos-rl-v1-backtest')||'[]');
+    var changed=false;
+    rows.forEach(function(r){
+      if(r.result||r.date!==yesterday)return;
+      var sc=scores[r.away+'@'+r.home];
+      if(!sc)return;
+      var mg=sc.home_score-sc.away_score;
+      var pk=(r.pick||'');
+      if(pk.indexOf('+1.5')>=0||pk.indexOf('+7.5')>=0){
+        r.result=Math.abs(mg)<=Math.abs(parseFloat(pk.match(/[+-][0-9.]+/)||[1.5])||1.5)?'COVER':'MISS';
+      }else if(pk.indexOf('-1.5')>=0||pk.indexOf('-7.5')>=0){
+        r.result=mg>=2?'COVER':'MISS';
+      }else{
+        var sd=(r.pick_side||'').toUpperCase();
+        if(sd==='HOME')r.result=mg>=2?'COVER':'MISS';
+        else if(sd==='AWAY')r.result=mg<=-2?'COVER':'MISS';
+      }
+      if(r.result)changed=true;
+    });
+    if(changed)localStorage.setItem('edgeos-rl-v1-backtest',JSON.stringify(rows));
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var scoresByDate={"2026-10-28": {"Milwaukee Brewers@Tampa Bay Rays": {"home": "Tampa Bay Rays", "away": "Milwaukee Brewers", "home_score": 1, "away_score": 4, "total": 5, "date": "2026-10-28"}}, "2026-10-27": {"Milwaukee Brewers@Tampa Bay Rays": {"home": "Tampa Bay Rays", "away": "Milwaukee Brewers", "home_score": 4, "away_score": 3, "total": 7, "date": "2026-10-27"}}, "2026-10-26": {"Milwaukee Brewers@Tampa Bay Rays": {"home": "Tampa Bay Rays", "away": "Milwaukee Brewers", "home_score": 1, "away_score": 10, "total": 11, "date": "2026-10-26"}}, "2026-10-24": {"Tampa Bay Rays@Milwaukee Brewers": {"home": "Milwaukee Brewers", "away": "Tampa Bay Rays", "home_score": 5, "away_score": 4, "total": 9, "date": "2026-10-24"}}, "2026-10-23": {"Tampa Bay Rays@Milwaukee Brewers": {"home": "Milwaukee Brewers", "away": "Tampa Bay Rays", "home_score": 3, "away_score": 2, "total": 5, "date": "2026-10-23"}}, "2026-10-19": {"Cleveland Guardians@Tampa Bay Rays": {"home": "Tampa Bay Rays", "away": "Cleveland Guardians", "home_score": 7, "away_score": 3, "total": 10, "date": "2026-10-19"}}, "2026-10-18": {"Tampa Bay Rays@Cleveland Guardians": {"home": "Cleveland Guardians", "away": "Tampa Bay Rays", "home_score": 1, "away_score": 3, "total": 4, "date": "2026-10-18"}}, "2026-10-17": {"Tampa Bay Rays@Cleveland Guardians": {"home": "Cleveland Guardians", "away": "Tampa Bay Rays", "home_score": 3, "away_score": 7, "total": 10, "date": "2026-10-17"}}, "2026-10-15": {"Tampa Bay Rays@Cleveland Guardians": {"home": "Cleveland Guardians", "away": "Tampa Bay Rays", "home_score": 3, "away_score": 2, "total": 5, "date": "2026-10-15"}, "Milwaukee Brewers@Los Angeles Dodgers": {"home": "Los Angeles Dodgers", "away": "Milwaukee Brewers", "home_score": 4, "away_score": 6, "total": 10, "date": "2026-10-15"}}, "2026-10-14": {"Milwaukee Brewers@Los Angeles Dodgers": {"home": "Los Angeles Dodgers", "away": "Milwaukee Brewers", "home_score": 2, "away_score": 6, "total": 8, "date": "2026-10-14"}}, "2026-10-13": {"Cleveland Guardians@Tampa Bay Rays": {"home": "Tampa Bay Rays", "away": "Cleveland Guardians", "home_score": 3, "away_score": 1, "total": 4, "date": "2026-10-13"}}, "2026-10-12": {"Los Angeles Dodgers@Milwaukee Brewers": {"home": "Milwaukee Brewers", "away": "Los Angeles Dodgers", "home_score": 7, "away_score": 4, "total": 11, "date": "2026-10-12"}, "Cleveland Guardians@Tampa Bay Rays": {"home": "Tampa Bay Rays", "away": "Cleveland Guardians", "home_score": 3, "away_score": 7, "total": 10, "date": "2026-10-12"}}, "2026-10-11": {"Los Angeles Dodgers@Milwaukee Brewers": {"home": "Milwaukee Brewers", "away": "Los Angeles Dodgers", "home_score": 2, "away_score": 1, "total": 3, "date": "2026-10-11"}}, "2026-10-10": {"Chicago White Sox@Cleveland Guardians": {"home": "Cleveland Guardians", "away": "Chicago White Sox", "home_score": 2, "away_score": 0, "total": 2, "date": "2026-10-10"}}};
+  function gradeKey(key,type){
+    try{
+      var rows=JSON.parse(localStorage.getItem(key)||'[]');
+      var changed=false;
+      rows.forEach(function(r){
+        if(r.result)return;
+        var dt=r.date||'';
+        var dateScores=scoresByDate[dt];
+        if(!dateScores)return;
+        var aw=(r.away||r.away_team||''),hw=(r.home||r.home_team||'');
+        var sc=dateScores[aw+'@'+hw];
+        if(!sc)return;
+        if(type==='totals'){
+          var pick=(r.pick||'').toUpperCase();
+          var line=parseFloat(r.line||0);
+          var total=sc.total;
+          if(total===line)r.result='PUSH';
+          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';
+          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';
+          r.actual=total;
+        }else if(type==='ml'){
+          var side=(r.pick_side||'').toUpperCase();
+          var hs=sc.home_score,as=sc.away_score;
+          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';
+          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';
+        }else if(type==='rl'){
+          var mg=sc.home_score-sc.away_score;
+          var pk=(r.pick||'');
+          if(pk.indexOf('+1.5')>=0)r.result=Math.abs(mg)<=1?'COVER':'MISS';
+          else if(pk.indexOf('-1.5')>=0)r.result=mg>=2?'COVER':'MISS';
+          else{var sd=(r.pick_side||'').toUpperCase();r.result=sd==='HOME'?(mg>=2?'COVER':'MISS'):(mg<=-2?'COVER':'MISS');}
+        }
+        if(r.result)changed=true;
+      });
+      if(changed)localStorage.setItem(key,JSON.stringify(rows));
+    }catch(e){}
+  }
+  gradeKey('edgeos-v10-today','totals');
+  gradeKey('edgeos-ml-v1-backtest','ml');
+  gradeKey('edgeos-rl-v1-backtest','rl');
+})();
+</script>
+<script>
+(function(){
+  var scores={"Utah Jazz@Minnesota Timberwolves": {"home": "Minnesota Timberwolves", "away": "Utah Jazz", "home_score": 115.0, "away_score": 100.0, "total": 215.0, "date": "2026-11-08"}, "Brooklyn Nets@Dallas Mavericks": {"home": "Dallas Mavericks", "away": "Brooklyn Nets", "home_score": 130.0, "away_score": 93.0, "total": 223.0, "date": "2026-11-08"}, "Boston Celtics@Milwaukee Bucks": {"home": "Milwaukee Bucks", "away": "Boston Celtics", "home_score": 97.0, "away_score": 117.0, "total": 214.0, "date": "2026-11-08"}, "New Orleans Pelicans@Los Angeles Clippers": {"home": "Los Angeles Clippers", "away": "New Orleans Pelicans", "home_score": 139.0, "away_score": 123.0, "total": 262.0, "date": "2026-11-08"}, "Miami Heat@Sacramento Kings": {"home": "Sacramento Kings", "away": "Miami Heat", "home_score": 108.0, "away_score": 114.0, "total": 222.0, "date": "2026-11-08"}};
+  var yesterday='2026-11-08';
+  function grade(key,type){
+    try{
+      var rows=JSON.parse(localStorage.getItem(key)||'[]');
+      var changed=false;
+      rows.forEach(function(r){
+        if(r.result||r.date!==yesterday)return;
+        var sc=scores[r.away+'@'+r.home];
+        if(!sc)return;
+        if(type==='totals'){
+          var pick=(r.pick||'').toUpperCase();
+          var line=parseFloat(r.line||0);
+          var total=sc.total;
+          if(total===line)r.result='PUSH';
+          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';
+          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';
+          r.actual=total;
+        }else{
+          var side=(r.pick_side||'').toUpperCase();
+          var hs=sc.home_score,as=sc.away_score;
+          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';
+          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';
+        }
+        if(r.result)changed=true;
+      });
+      if(changed)localStorage.setItem(key,JSON.stringify(rows));
+    }catch(e){}
+  }
+  grade('edgeos-v10-today', 'totals');
+  grade('edgeos-ml-v1-backtest', 'ml');
+})();
+</script>
+<script>
+(function(){
+  var scores={"Utah Jazz@Minnesota Timberwolves": {"home": "Minnesota Timberwolves", "away": "Utah Jazz", "home_score": 115.0, "away_score": 100.0, "total": 215.0, "date": "2026-11-08"}, "Brooklyn Nets@Dallas Mavericks": {"home": "Dallas Mavericks", "away": "Brooklyn Nets", "home_score": 130.0, "away_score": 93.0, "total": 223.0, "date": "2026-11-08"}, "Boston Celtics@Milwaukee Bucks": {"home": "Milwaukee Bucks", "away": "Boston Celtics", "home_score": 97.0, "away_score": 117.0, "total": 214.0, "date": "2026-11-08"}, "New Orleans Pelicans@Los Angeles Clippers": {"home": "Los Angeles Clippers", "away": "New Orleans Pelicans", "home_score": 139.0, "away_score": 123.0, "total": 262.0, "date": "2026-11-08"}, "Miami Heat@Sacramento Kings": {"home": "Sacramento Kings", "away": "Miami Heat", "home_score": 108.0, "away_score": 114.0, "total": 222.0, "date": "2026-11-08"}};
+  var yesterday='2026-11-08';
+  try{
+    var rows=JSON.parse(localStorage.getItem('edgeos-rl-v1-backtest')||'[]');
+    var changed=false;
+    rows.forEach(function(r){
+      if(r.result||r.date!==yesterday)return;
+      var sc=scores[r.away+'@'+r.home];
+      if(!sc)return;
+      var mg=sc.home_score-sc.away_score;
+      var pk=(r.pick||'');
+      if(pk.indexOf('+1.5')>=0||pk.indexOf('+7.5')>=0){
+        r.result=Math.abs(mg)<=Math.abs(parseFloat(pk.match(/[+-][0-9.]+/)||[1.5])||1.5)?'COVER':'MISS';
+      }else if(pk.indexOf('-1.5')>=0||pk.indexOf('-7.5')>=0){
+        r.result=mg>=2?'COVER':'MISS';
+      }else{
+        var sd=(r.pick_side||'').toUpperCase();
+        if(sd==='HOME')r.result=mg>=2?'COVER':'MISS';
+        else if(sd==='AWAY')r.result=mg<=-2?'COVER':'MISS';
+      }
+      if(r.result)changed=true;
+    });
+    if(changed)localStorage.setItem('edgeos-rl-v1-backtest',JSON.stringify(rows));
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var scores={"Tampa Bay Buccaneers@Chicago Bears": {"home": "Chicago Bears", "away": "Tampa Bay Buccaneers", "home_score": 27.0, "away_score": 24.0, "total": 51.0}};
+  var yesterday='2026-11-08';
+  function grade(key,type){
+    try{
+      var rows=JSON.parse(localStorage.getItem(key)||'[]');
+      var changed=false;
+      rows.forEach(function(r){
+        if(r.result||r.date!==yesterday)return;
+        var sc=scores[r.away+'@'+r.home];
+        if(!sc)return;
+        if(type==='totals'){
+          var pick=(r.pick||'').toUpperCase();
+          var line=parseFloat(r.line||0);
+          var total=sc.total;
+          if(total===line)r.result='PUSH';
+          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';
+          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';
+          r.actual=total;
+        }else{
+          var side=(r.pick_side||'').toUpperCase();
+          var hs=sc.home_score,as=sc.away_score;
+          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';
+          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';
+        }
+        if(r.result)changed=true;
+      });
+      if(changed)localStorage.setItem(key,JSON.stringify(rows));
+    }catch(e){}
+  }
+  grade('edgeos-v10-today', 'totals');
+  grade('edgeos-ml-v1-backtest', 'ml');
+})();
+</script>
+<script>
+(function(){
+  var scores={"Tampa Bay Buccaneers@Chicago Bears": {"home": "Chicago Bears", "away": "Tampa Bay Buccaneers", "home_score": 27.0, "away_score": 24.0, "total": 51.0}};
+  var yesterday='2026-11-08';
+  try{
+    var rows=JSON.parse(localStorage.getItem('edgeos-rl-v1-backtest')||'[]');
+    var changed=false;
+    rows.forEach(function(r){
+      if(r.result||r.date!==yesterday)return;
+      var sc=scores[r.away+'@'+r.home];
+      if(!sc)return;
+      var mg=sc.home_score-sc.away_score;
+      var pk=(r.pick||'');
+      if(pk.indexOf('+1.5')>=0||pk.indexOf('+7.5')>=0){
+        r.result=Math.abs(mg)<=Math.abs(parseFloat(pk.match(/[+-][0-9.]+/)||[1.5])||1.5)?'COVER':'MISS';
+      }else if(pk.indexOf('-1.5')>=0||pk.indexOf('-7.5')>=0){
+        r.result=mg>=2?'COVER':'MISS';
+      }else{
+        var sd=(r.pick_side||'').toUpperCase();
+        if(sd==='HOME')r.result=mg>=2?'COVER':'MISS';
+        else if(sd==='AWAY')r.result=mg<=-2?'COVER':'MISS';
+      }
+      if(r.result)changed=true;
+    });
+    if(changed)localStorage.setItem('edgeos-rl-v1-backtest',JSON.stringify(rows));
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var scores={"Incarnate Word Cardinals@UTEP Miners": {"home": "UTEP Miners", "away": "Incarnate Word Cardinals", "home_score": 79.0, "away_score": 60.0, "total": 139.0}, "Pittsburgh Panthers@Penn State Nittany Lions": {"home": "Penn State Nittany Lions", "away": "Pittsburgh Panthers", "home_score": 76.0, "away_score": 82.0, "total": 158.0}, "Houston Cougars@California Golden Bears": {"home": "California Golden Bears", "away": "Houston Cougars", "home_score": 68.0, "away_score": 86.0, "total": 154.0}, "UT-Arlington Mavericks@Hawai'i Rainbow Warriors": {"home": "Hawai'i Rainbow Warriors", "away": "UT-Arlington Mavericks", "home_score": 71.0, "away_score": 62.0, "total": 133.0}, "Wichita St Shockers@USC Trojans": {"home": "USC Trojans", "away": "Wichita St Shockers", "home_score": 93.0, "away_score": 86.0, "total": 179.0}};
+  var yesterday='2026-11-08';
+  function grade(key,type){
+    try{
+      var rows=JSON.parse(localStorage.getItem(key)||'[]');
+      var changed=false;
+      rows.forEach(function(r){
+        if(r.result||r.date!==yesterday)return;
+        var sc=scores[r.away+'@'+r.home];
+        if(!sc)return;
+        if(type==='totals'){
+          var pick=(r.pick||'').toUpperCase();
+          var line=parseFloat(r.line||0);
+          var total=sc.total;
+          if(total===line)r.result='PUSH';
+          else if(pick==='OVER')r.result=total>line?'HIT':'MISS';
+          else if(pick==='UNDER')r.result=total<line?'HIT':'MISS';
+          r.actual=total;
+        }else{
+          var side=(r.pick_side||'').toUpperCase();
+          var hs=sc.home_score,as=sc.away_score;
+          if(side==='HOME')r.result=hs>as?'WIN':'LOSS';
+          else if(side==='AWAY')r.result=as>hs?'WIN':'LOSS';
+        }
+        if(r.result)changed=true;
+      });
+      if(changed)localStorage.setItem(key,JSON.stringify(rows));
+    }catch(e){}
+  }
+  grade('edgeos-v10-today', 'totals');
+  grade('edgeos-ml-v1-backtest', 'ml');
+})();
+</script>
+<script>
+(function(){
+  var scores={"Incarnate Word Cardinals@UTEP Miners": {"home": "UTEP Miners", "away": "Incarnate Word Cardinals", "home_score": 79.0, "away_score": 60.0, "total": 139.0}, "Pittsburgh Panthers@Penn State Nittany Lions": {"home": "Penn State Nittany Lions", "away": "Pittsburgh Panthers", "home_score": 76.0, "away_score": 82.0, "total": 158.0}, "Houston Cougars@California Golden Bears": {"home": "California Golden Bears", "away": "Houston Cougars", "home_score": 68.0, "away_score": 86.0, "total": 154.0}, "UT-Arlington Mavericks@Hawai'i Rainbow Warriors": {"home": "Hawai'i Rainbow Warriors", "away": "UT-Arlington Mavericks", "home_score": 71.0, "away_score": 62.0, "total": 133.0}, "Wichita St Shockers@USC Trojans": {"home": "USC Trojans", "away": "Wichita St Shockers", "home_score": 93.0, "away_score": 86.0, "total": 179.0}};
+  var yesterday='2026-11-08';
   try{
     var rows=JSON.parse(localStorage.getItem('edgeos-rl-v1-backtest')||'[]');
     var changed=false;
